@@ -17,6 +17,9 @@
 mono_crash.*
 
 # Build results
+
+bin/
+obj/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -396,3 +399,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Ignore Python virtual environments   
+.venv/

@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "REST Client",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-rest-client",
+            "program": "${workspaceFolder}/rest-client/bin/Debug/net8.0/rest_client.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/rest-client",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "SDK Client",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-sdk-client",
+            "program": "${workspaceFolder}/sdk-client/bin/Debug/net8.0/sdk-client.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/sdk-client",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart"
+        }
+    ]
+}
