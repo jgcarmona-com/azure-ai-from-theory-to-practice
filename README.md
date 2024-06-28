@@ -20,7 +20,7 @@ Sigue estos pasos para configurar tu entorno de desarrollo:
 2. Navega hasta el laboratorio que quieras probar y abre la carpeta python o csharp con VSCode o tu IDE favorito.
 3. Para los ejemplos de Python es recomendable crear un entorno virtual
    ```bash
-   cd azure-ai-from-theory-to-practice
+   cd azure-ai-from-theory-to-practice/labs/xyz/python
    python -m venv .venv
    source .venv/bin/activate  # En Windows: .venv\Scripts\activate
    ```
