@@ -23,19 +23,17 @@ namespace rest_client
                 AiSvcEndpoint = configuration["AIServicesEndpoint"];
                 AiSvCKey = configuration["AIServicesKey"];
 
-
                 // Get user input (until they enter "quit")
                 string userText = "";
-                while (userText.ToLower() != "quit")
+                while (!userText.Equals("quit", StringComparison.CurrentCultureIgnoreCase))
                 {
                     Console.WriteLine("Enter some text ('quit' to stop)");
                     userText = Console.ReadLine();
-                    if (userText.ToLower() != "quit")
+                    if (!userText.Equals("quit", StringComparison.CurrentCultureIgnoreCase))
                     {
                         // Call function to detect language
                         await GetLanguage(userText);
                     }
-
                 }
             }
             catch (Exception ex)
@@ -43,11 +41,12 @@ namespace rest_client
                 Console.WriteLine(ex.Message);
             }
         }
+
         static async Task GetLanguage(string text)
         {
-            // Construct the JSON request body
             try
             {
+                // Construct the JSON request body
                 JObject jsonBody = new JObject(
                     // Create a collection of documents (we'll only use one, but you could have more)
                     new JProperty("documents",
@@ -57,11 +56,11 @@ namespace rest_client
                             new JProperty("id", 1),
                             new JProperty("text", text)
                     ))));
-                
+
                 // Encode as UTF-8
                 UTF8Encoding utf8 = new UTF8Encoding(true, true);
                 byte[] encodedBytes = utf8.GetBytes(jsonBody.ToString());
-                
+
                 // Let's take a look at the JSON we'll send to the service
                 Console.WriteLine(utf8.GetString(encodedBytes, 0, encodedBytes.Length));
 
@@ -103,11 +102,10 @@ namespace rest_client
                     Console.WriteLine(response.ToString());
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
         }
     }
 }

@@ -1,14 +1,12 @@
 ﻿using System;
 using Azure;
 using Microsoft.Extensions.Configuration;
-using System.Text;
 using Azure.AI.TextAnalytics;
 
 namespace sdk_client
 {
     class Program
     {
-
         private static string AISvcEndpoint;
         private static string AISvcKey;
         static void Main(string[] args)
@@ -23,17 +21,16 @@ namespace sdk_client
 
                 // Get user input (until they enter "quit")
                 string userText = "";
-                while (userText.ToLower() != "quit")
+                while (!userText.Equals("quit", StringComparison.CurrentCultureIgnoreCase))
                 {
                     Console.WriteLine("\nEnter some text ('quit' to stop)");
                     userText = Console.ReadLine();
-                    if (userText.ToLower() != "quit")
+                    if (!userText.Equals("quit", StringComparison.CurrentCultureIgnoreCase))
                     {
                         // Call function to detect language
                         string language = GetLanguage(userText);
                         Console.WriteLine("Language: " + language);
                     }
-
                 }
             }
             catch (Exception ex)
@@ -41,9 +38,9 @@ namespace sdk_client
                 Console.WriteLine(ex.Message);
             }
         }
+
         static string GetLanguage(string text)
         {
-
             // Create client using endpoint and key
             AzureKeyCredential credentials = new AzureKeyCredential(AISvcKey);
             Uri endpoint = new Uri(AISvcEndpoint);
@@ -51,8 +48,7 @@ namespace sdk_client
 
             // Call the service to get the detected language
             DetectedLanguage detectedLanguage = client.DetectLanguage(text);
-            return(detectedLanguage.Name);
-
+            return detectedLanguage.Name;
         }
     }
 }
