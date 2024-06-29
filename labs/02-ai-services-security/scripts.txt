@@ -1,0 +1,14 @@
+# LIST KEYS:
+az cognitiveservices account keys list --name azure-ai-from-theory-to-practice-lab-02 --resource-group msft-learn
+
+# REGENERATE A KEY:
+az cognitiveservices account keys regenerate --name azure-ai-from-theory-to-practice-lab-02 --resource-group msft-learn --key-name key1
+
+# CREATE A SERVICE PRINCIPAL:
+az ad sp create-for-rbac -n "api://<spName>" --role owner --scopes subscriptions/<subscriptionId>/resourceGroups/<resourceGroup>
+
+# GET OBJECT ID:
+az ad sp show --id <appId>
+
+# BRING PERMISSIONS TO THE SERVICE PRINCIPAL:
+az keyvault set-policy -n <keyVaultName> --object-id <objectId> --secret-permissions get list

@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-rest-client",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/01-consume-azure-ai-services/csharp/rest-client/rest_client.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-sdk-client",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/01-consume-azure-ai-services/csharp/sdk-client/sdk-client.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
