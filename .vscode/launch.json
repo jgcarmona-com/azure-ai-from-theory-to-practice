@@ -52,10 +52,29 @@
             "internalConsoleOptions": "openOnSessionStart"
         },
         {
+            "name": "2-csharp-keyvault-client",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-keyvault-client",
+            "program": "${workspaceFolder}/labs/02-ai-services-security/csharp/keyvault-client/bin/Debug/net8.0/keyvault_client.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/labs/02-ai-services-security/csharp/keyvault-client",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
             "name": "2-python-token-based-client",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/labs/02-ai-services-security/python/token-based-client/token-based-client.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "2-python-keyvault-client",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/02-ai-services-security/python/keyvault-client/keyvault-client.py",
             "console": "integratedTerminal"
         },
     ]
