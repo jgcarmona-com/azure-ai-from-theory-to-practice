@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "REST Client",
+            "name": "1-csharp-rest-client",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-rest-client",
@@ -14,7 +14,7 @@
             "internalConsoleOptions": "openOnSessionStart"
         },
         {
-            "name": "SDK Client",
+            "name": "1-csharp-sdk-client",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-sdk-client",
@@ -24,6 +24,39 @@
             "stopAtEntry": false,
             "console": "internalConsole",
             "internalConsoleOptions": "openOnSessionStart"
-        }
+        },
+        {
+            "name": "1-python-rest-client",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/01-consume-azure-ai-services/python/rest-client/rest-client.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "1-python-sdk-client",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/01-consume-azure-ai-services/python/sdk-client/sdk-client.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "2-csharp-token-based-client",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-token-based-client",
+            "program": "${workspaceFolder}/labs/02-ai-services-security/csharp/token-based-client/bin/Debug/net8.0/token_based_client.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/labs/02-ai-services-security/csharp/token-based-client",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "2-python-token-based-client",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/02-ai-services-security/python/token-based-client/token-based-client.py",
+            "console": "integratedTerminal"
+        },
     ]
 }

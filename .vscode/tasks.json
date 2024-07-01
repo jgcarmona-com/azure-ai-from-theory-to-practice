@@ -20,6 +20,16 @@
                 "${workspaceFolder}/labs/01-consume-azure-ai-services/csharp/sdk-client/sdk-client.csproj"
             ],
             "problemMatcher": "$msCompile"
-        }
+        },
+        {
+            "label": "build-token-based-client",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/02-ai-services-security/csharp/token-based-client/token_based_client.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }
