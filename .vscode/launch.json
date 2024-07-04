@@ -56,9 +56,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-keyvault-client",
-            "program": "${workspaceFolder}/labs/02-ai-services-security/csharp/keyvault-client/bin/Debug/net8.0/keyvault_client.dll",
+            "program": "${workspaceFolder}/labs/02-ai-services-security/csharp/keyvault_client/bin/Debug/net8.0/keyvault_client.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/labs/02-ai-services-security/csharp/keyvault-client",
+            "cwd": "${workspaceFolder}/labs/02-ai-services-security/csharp/keyvault_client",
             "stopAtEntry": false,
             "console": "internalConsole",
             "internalConsoleOptions": "openOnSessionStart"

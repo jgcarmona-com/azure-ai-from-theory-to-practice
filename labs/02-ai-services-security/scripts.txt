@@ -1,14 +1,21 @@
 # LIST KEYS:
-az cognitiveservices account keys list --name azure-ai-from-theory-to-practice-lab-02 --resource-group msft-learn
+az cognitiveservices account keys list --name azure-ai-lab-02 --resource-group msft-learn
 
 # REGENERATE A KEY:
-az cognitiveservices account keys regenerate --name azure-ai-from-theory-to-practice-lab-02 --resource-group msft-learn --key-name key1
+az cognitiveservices account keys regenerate --name azure-ai-lab-02 --resource-group msft-learn --key-name key1
 
 # CREATE A SERVICE PRINCIPAL:
-az ad sp create-for-rbac -n "api://<spName>" --role owner --scopes subscriptions/<subscriptionId>/resourceGroups/<resourceGroup>
+az ad sp create-for-rbac -n "azure-ai-lab-02" --role owner --scopes subscriptions/985e48a1-1dc8-4c0d-b790-4e8c25b3572b/resourceGroups/msft-learn
 
 # GET OBJECT ID:
 az ad sp show --id <appId>
 
-# BRING PERMISSIONS TO THE SERVICE PRINCIPAL:
+# CREATE POLICY TO BRING PERMISSIONS TO THE SERVICE PRINCIPAL:
+az keyvault set-policy -n aaitp-lab-kv --spn b65c9104-3b21-44bb-ba19-db644299de63 --secret-permissions get
 az keyvault set-policy -n <keyVaultName> --object-id <objectId> --secret-permissions get list
+
+# Assigning a Role to a Service Principal:
+az role assignment create --assignee <ServicePrincipalId> --role <roleName> --scope <scope>
+
+# Assigning a Role to a Managed Identity
+az role assignment create --assignee <ManagedIdentityClientId> --role <roleName> --scope <scope>
