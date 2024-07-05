@@ -1,20 +1,17 @@
-# Use the base image of Azure Cognitive Services for Text Analytics Language Detection
+# Use the Azure Cognitive Services text analytics container image
 FROM mcr.microsoft.com/azure-cognitive-services/textanalytics/language:latest
 
-# Copy the .env file to the container
+# Set the working directory
+WORKDIR /app
+
+# Copy the .env file into the container
 COPY .env .env
 
-# Install necessary tools to process the .env file
-RUN apk update && apk add dos2unix
+# Read environment variables from the .env file and export them
+ENV $(cat .env | xargs)
 
-# Convert the .env file to Unix format
-RUN dos2unix .env
-
-# Load the environment variables
-RUN set -a && source .env && set +a
-
-# Expose port 5000
+# Expose the port on which the container will run
 EXPOSE 5000
 
-# Command to start the container
-CMD ["sh", "-c", "dotnet Microsoft.CognitiveServices.TextAnalytics.LanguageDetectionService.dll"]
+# Command to run the Azure Cognitive Services container with the specified environment variables
+CMD ["sh", "-c", "Eula=accept Billing=$BILLING_ENDPOINT ApiKey=$API_KEY /usr/local/bin/start.sh"]
