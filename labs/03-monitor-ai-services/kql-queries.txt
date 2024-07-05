@@ -1,0 +1,37 @@
+
+AzureDiagnostics
+| where Category == "RequestResponse"
+| project TimeGenerated, Resource, DurationMs, CallerIPAddress, ResultSignature
+| sort by TimeGenerated desc
+
+AzureDiagnostics
+| where Resource contains "azure-ai-lab-02"
+| project TimeGenerated, ResourceGroup, Resource, OperationName, ResultType
+| sort by TimeGenerated desc
+
+AzureDiagnostics
+| where Category == "RequestResponse"
+| where tostring(ResultSignature) startswith "2"
+| summarize Count = count() by ResultSignature
+| project ResultSignature, Count
+| sort by ResultSignature
+
+AzureDiagnostics
+| where Category == "RequestResponse"
+| where tostring(ResultSignature) startswith "4"
+| summarize Count = count() by ResultSignature
+| project ResultSignature, Count
+| sort by ResultSignature
+
+AzureDiagnostics
+| where Category == "RequestResponse"
+| extend StatusCategory = case(
+    tostring(ResultSignature) startswith "2", "2xx",
+    tostring(ResultSignature) startswith "4", "4xx",
+    tostring(ResultSignature) startswith "5", "5xx",
+    "Other"
+)
+| where StatusCategory != "Other"
+| summarize Count = count() by bin(TimeGenerated, 10m), StatusCategory
+| project TimeGenerated, StatusCategory, Count
+| sort by TimeGenerated asc
