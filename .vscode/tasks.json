@@ -31,7 +31,6 @@
             ],
             "problemMatcher": "$msCompile"
         },
-        
         {
             "label": "build-keyvault-client",
             "command": "dotnet",
@@ -42,5 +41,46 @@
             ],
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "docker-build-ai-service-wrapper",
+            "type": "shell",
+            "command": "docker build --pull --rm -f Dockerfile -t ai-service-wrapper:latest .",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}/labs/04-use-a-container/python/ai-service-wrapper"
+            }
+        },
+        {
+            "label": "docker-run-ai-service-wrapper",
+            "type": "shell",
+            "command": "docker run --rm -it --env-file .env -p 5000:5000 -p 5001:5001 -p 5678:5678 ai-service-wrapper:latest",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "dependsOn": "docker-build-ai-service-wrapper",
+            "options": {
+                "cwd": "${workspaceFolder}/labs/04-use-a-container/python/ai-service-wrapper"
+            }
+        },
+        {
+            "label": "docker-run-debug-ai-service-wrapper",
+            "type": "shell",
+            "command": "docker run --rm -it --env-file .env -p 5000:5000 -p 5001:5001 -p 5678:5678 -e DEBUGPY_PORT=5678 ai-service-wrapper:latest",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "dependsOn": "docker-build-ai-service-wrapper",
+            "options": {
+                "cwd": "${workspaceFolder}/labs/04-use-a-container/python/ai-service-wrapper"
+            }
+        }
     ]
 }

@@ -77,5 +77,38 @@
             "program": "${workspaceFolder}/labs/02-ai-services-security/python/keyvault-client/keyvault-client.py",
             "console": "integratedTerminal"
         },
+        {
+            "name": "4 Python: FastAPI",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/04-use-a-container/python/ai-service-wrapper/server.py",
+            "args": [
+                "server:app",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8000",
+                "--reload"
+            ],
+            "envFile": "${workspaceFolder}/labs/04-use-a-container/python/ai-service-wrapper/.env",
+            "console": "integratedTerminal",
+            "jinja": true
+        },
+        {
+            "name": "4 Docker: Python - FastAPI - ai-service-wrapper",
+            "type": "debugpy",
+            "request": "attach",
+            "preLaunchTask": "docker-run-debug-ai-service-wrapper",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/labs/04-use-a-container/python/ai-service-wrapper",
+                    "remoteRoot": "/app"
+                }
+            ]
+        }
     ]
 }
