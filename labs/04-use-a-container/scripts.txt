@@ -1,0 +1,18 @@
+# 1. Provision an Azure AI Services Resource
+# Create a new Azure AI services multi-service account resource
+az cognitiveservices account create --name <unique-name> --resource-group <resource-group> --kind CognitiveServices --sku S0 --location <region> --yes
+
+# 2. Deploy and Run a Container in Azure
+# Create a Container Instances resource
+az container create --resource-group <resource-group> --name <container-name> --image mcr.microsoft.com/azure-cognitive-services/textanalytics/language:latest --cpu 1 --memory 1.5 --ports 5000 --dns-name-label <unique-dns-name> --environment-variables ApiKey=<your-azure-ai-services-key> Billing=<your-azure-ai-services-endpoint> Eula=accept --restart-policy OnFailure --os-type Linux
+
+# 3. Test the Container
+# Save the following command to a file named rest-test.cmd:
+# curl -X POST "http://<your_ACI_IP_address_or_FQDN>:5000/text/analytics/v3.0/languages" -H "Content-Type: application/json" --data-ascii "{'documents':[{'id':1,'text':'Hello world.'},{'id':2,'text':'Salut tout le monde.'}]}"
+
+# 4. Clean Up Resources
+# To delete the container instance resource:
+az container delete --resource-group <resource-group> --name <container-name> --yes
+
+# To delete the Azure AI Services resource, delete the entire resource group:
+az group delete --name <resource-group> --yes --no-wait
