@@ -1,0 +1,6 @@
+python-dotenv
+azure-core
+debugpy
+azure-ai-vision-imageanalysis
+pillow
+matplotlib

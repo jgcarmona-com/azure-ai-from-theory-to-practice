@@ -81,6 +81,16 @@
             "options": {
                 "cwd": "${workspaceFolder}/labs/04-use-a-container/python/ai-service-wrapper"
             }
-        }
+        },
+        {
+            "label": "build-image-analysis-csharp",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/05-analyze-images/csharp/image-analysis/image-analysis.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }

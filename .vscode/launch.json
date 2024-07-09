@@ -109,6 +109,30 @@
                     "remoteRoot": "/app"
                 }
             ]
+        },
+        {
+            "name": "5-csharp-image-analysis",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-image-analysis-csharp",
+            "program": "${workspaceFolder}/labs/05-analyze-images/csharp/image-analysis/bin/Debug/net8.0/image-analysis.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/labs/05-analyze-images/csharp/image-analysis",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "logging": {
+                "moduleLoad": false,
+                "trace": false
+            }
+        },
+        {
+            "name": "5-python-image-analysis",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/05-analyze-images/python/image-analysis/main.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/labs/05-analyze-images/python/image-analysis/.env"
         }
     ]
 }

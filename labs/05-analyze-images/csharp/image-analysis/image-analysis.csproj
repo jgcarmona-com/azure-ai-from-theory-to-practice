@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>image_analysis</RootNamespace>
+    <NoWarn>1998</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="arial.ttfZone.Identifier" />
+    <None Remove="images\street_no_bg.jpg" />
+  </ItemGroup>
+
+ <ItemGroup>
+     <RuntimeHostConfigurationOption Include="System.Drawing.EnableUnixSupport" Value="true" />
+ </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="1.0.0-beta.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.3" />
+    <PackageReference Include="SixLabors.Fonts" Version="2.0.4" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="arial.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="images\building.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="images\person.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="images\street.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
