@@ -134,6 +134,5 @@ namespace Ai102.ImageAnalysis
                 ctx.DrawText(textOptions, text, Brushes.Solid(Color.Black)); 
             });
         }
-
     }
 }
