@@ -37,7 +37,7 @@ public class BackgroundRemover
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _key);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            string imageUrl = $"https://github.com/MicrosoftLearning/mslearn-ai-vision/blob/main/Labfiles/01-analyze-images/Python/image-analysis/images/{imageFile}?raw=true";
+            string imageUrl = $"https://github.com/jgcarmona-com/azure-ai-from-theory-to-practice/blob/main/labs/05-analyze-images/csharp/image-analysis/images/{imageFile}?raw=true";
             var body = new { url = imageUrl };
             StringContent content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
 
