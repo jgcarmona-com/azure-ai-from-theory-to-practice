@@ -1,0 +1,3 @@
+azure-core
+azure-cognitiveservices-vision-customvision
+python-dotenv

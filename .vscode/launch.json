@@ -133,6 +133,30 @@
             "program": "${workspaceFolder}/labs/05-analyze-images/python/image-analysis/main.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/labs/05-analyze-images/python/image-analysis/.env"
+        },
+        {
+            "name": "06-csharp-image-classification",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-image-classification-csharp",
+            "program": "${workspaceFolder}/labs/06-image-classification/csharp/image-classification/bin/Debug/net8.0/image-classification.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/labs/06-image-classification/csharp/image-classification",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "logging": {
+                "moduleLoad": false,
+                "trace": false
+            }
+        },
+        {
+            "name": "06-python-image-classification",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/06-image-classification/python/image-clasification/main.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/labs/06-image-classification/python/image-clasification/.env"
         }
     ]
 }

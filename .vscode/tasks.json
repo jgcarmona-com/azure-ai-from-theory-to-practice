@@ -92,5 +92,17 @@
             ],
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "build-image-classification-csharp",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/06-image-classification/csharp/image-classification/image-classification.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile"
+        }
     ]
 }
