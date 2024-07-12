@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Linq;
 using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction;
+using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction.Models;
 using Microsoft.Extensions.Configuration;
 
 namespace Ai102.ImageClassification
@@ -17,21 +19,28 @@ namespace Ai102.ImageClassification
 
                 string predictionEndpoint = configuration["AIServicesEndpoint"];
                 string predictionKey = configuration["AIServicesKey"];
-                string targetImage = configuration["TargetImage"];
                 string modelId = configuration["ModelId"];
+                string iterationName = configuration["IterationName"];  // Load iteration name from settings
+                double confidenceThreshold = Convert.ToDouble(configuration["ConfidenceThreshold"]);  // Load confidence threshold
 
-                // Get image
-                string workingDirectory = Directory.GetCurrentDirectory();
-                string imageFile = Path.Combine(workingDirectory, "../../test-images", targetImage);
+                // Test images folder (relative path to Program.cs)
+                string testImagesFolder = Path.Combine(Directory.GetCurrentDirectory(), "../../test-images");
 
                 // Authenticate Azure Custom Vision client
                 CustomVisionPredictionClient predictionApi = AuthenticatePrediction(predictionEndpoint, predictionKey);
 
-                // Load test image
-                using FileStream testImage = new FileStream(imageFile, FileMode.Open);
+                // Iterate over all images in the test folder
+                foreach (string imageFile in Directory.GetFiles(testImagesFolder, "*.*", SearchOption.TopDirectoryOnly)
+                                                      .Where(s => s.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                                                  s.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                                                                  s.EndsWith(".png", StringComparison.OrdinalIgnoreCase)))
+                {
+                    // Load test image
+                    using FileStream testImage = new FileStream(imageFile, FileMode.Open);
 
-                // Make a prediction
-                TestIteration(predictionApi, modelId, testImage);
+                    // Make a prediction
+                    TestIteration(predictionApi, modelId, iterationName, testImage, imageFile, confidenceThreshold);
+                }
             }
             catch (Exception ex)
             {
@@ -49,19 +58,32 @@ namespace Ai102.ImageClassification
             return predictionApi;
         }
 
-        private static void TestIteration(CustomVisionPredictionClient predictionApi, string modelId, Stream testImage)
+        private static void TestIteration(CustomVisionPredictionClient predictionApi, string modelId, string iterationName, Stream testImage, string imageName, double confidenceThreshold)
         {
             // Convert modelId to Guid
             Guid projectId = Guid.Parse(modelId);
 
             // Make a prediction against the new project
-            Console.WriteLine("Making a prediction:");
-            var result = predictionApi.ClassifyImage(projectId, "Iteration1", testImage);
+            ImagePrediction result = predictionApi.ClassifyImage(projectId, iterationName, testImage);
 
-            // Loop over each prediction and write out the results
-            foreach (var c in result.Predictions)
+            // Find the top prediction
+            var topPrediction = result.Predictions.OrderByDescending(p => p.Probability).FirstOrDefault();
+
+            // Check if there's a prediction and it meets the confidence threshold
+            if (topPrediction != null)
             {
-                Console.WriteLine($"\t{c.TagName}: {c.Probability:P1}");
+                if (topPrediction.Probability >= confidenceThreshold)
+                {
+                    Console.WriteLine($"{Path.GetFileName(imageName)} --> {topPrediction.TagName} --> {topPrediction.Probability:P1}");
+                }
+                else
+                {
+                    Console.WriteLine($"{Path.GetFileName(imageName)} --> Uncertain --> {topPrediction.Probability:P1} (Best guess: {topPrediction.TagName})");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"No prediction result received for image: {imageName}");
             }
         }
     }

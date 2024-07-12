@@ -8,16 +8,18 @@ from msrest.authentication import ApiKeyCredentials
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Load environment variables from the .env file
+# Load environment variables
 load_dotenv()
 
-# Configuration variables from the .env file
-endpoint = os.getenv('AZURE_VISION_ENDPOINT')
-prediction_key = os.getenv('AZURE_VISION_KEY')
+# Configuration variables
+endpoint = os.getenv('AI_SERVICE_ENDPOINT')
+prediction_key = os.getenv('AI_SERVICE_KEY')
 model_id = os.getenv('AZURE_VISION_MODEL_ID')
+iteration_name = os.getenv('AZURE_VISION_ITERATION_NAME')
+confidence_threshold = float(os.getenv('AZURE_VISION_CONFIDENCE_THRESHOLD')) 
 
-# Target image for analysis (relative path to main.py)
-TARGET_IMAGE = os.path.join(os.path.dirname(__file__), '../../test-images/IMG_TEST_1.jpg')
+# Test images folder (relative path to main.py)
+TEST_IMAGES_FOLDER = os.path.join(os.path.dirname(__file__), '../../test-images')
 
 def main():
     try:
@@ -25,21 +27,27 @@ def main():
         credentials = ApiKeyCredentials(in_headers={"Prediction-key": prediction_key})
         predictor = CustomVisionPredictionClient(endpoint, credentials)
 
-        # Read the image
-        with open(TARGET_IMAGE, "rb") as image:
-            image_data = image.read()
+        # Iterate over all images in the test folder
+        for image_file in os.listdir(TEST_IMAGES_FOLDER):
+            if image_file.endswith(('.jpg', '.jpeg', '.png')):
+                image_path = os.path.join(TEST_IMAGES_FOLDER, image_file)
 
-        # Perform image prediction
-        response = predictor.classify_image(model_id, image_data)
+                # Read the image
+                with open(image_path, "rb") as image:
+                    image_data = image.read()
 
-        # Print results
-        if response:
-            logger.info("Image classification completed.")
-            logger.info("Raw response: %s", response)
-            for prediction in response.predictions:
-                logger.info(f"Label: {prediction.tag_name}, Confidence: {prediction.probability:.2f}")
-        else:
-            logger.error("No prediction result received.")
+                # Perform image prediction
+                response = predictor.classify_image(model_id, iteration_name, image_data)
+
+                # Process and print results
+                if response and response.predictions:
+                    top_prediction = max(response.predictions, key=lambda p: p.probability)
+                    if top_prediction.probability >= confidence_threshold:
+                        logger.info(f"{image_file} --> {top_prediction.tag_name} --> {top_prediction.probability:.2f}")
+                    else:
+                        logger.info(f"{image_file} --> Uncertain --> {top_prediction.probability:.2f} (Best guess: {top_prediction.tag_name})")
+                else:
+                    logger.error("No prediction result received for image: %s", image_path)
 
     except Exception as ex:
         logger.error(ex)
