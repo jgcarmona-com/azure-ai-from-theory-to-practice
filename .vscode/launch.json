@@ -157,6 +157,14 @@
             "program": "${workspaceFolder}/labs/06-image-classification/python/image-clasification/main.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/labs/06-image-classification/python/image-clasification/.env"
+        },
+        {
+            "name": "06-pythoncustom-vision-workflow-example",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/06-image-classification/python/image-clasification/workflow_example.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/labs/06-image-classification/python/image-clasification/.env"
         }
     ]
 }

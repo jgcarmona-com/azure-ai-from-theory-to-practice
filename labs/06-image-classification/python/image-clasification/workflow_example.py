@@ -16,10 +16,8 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 # Configuration variables from the .env file
-training_endpoint = os.getenv('AZURE_TRAINING_ENDPOINT')
-training_key = os.getenv('AZURE_TRAINING_KEY')
-prediction_endpoint = os.getenv('AZURE_PREDICTION_ENDPOINT')
-prediction_key = os.getenv('AZURE_PREDICTION_KEY')
+service_endpoint = os.getenv('AI_SERVICE_ENDPOINT')
+service_key = os.getenv('AI_SERVICE_KEY')
 prediction_resource_id = os.getenv('AZURE_PREDICTION_RESOURCE_ID')
 
 # Target image for analysis (relative path to main.py)
@@ -28,12 +26,12 @@ TARGET_IMAGE = os.path.join(os.path.dirname(__file__), '../../test-images/IMG_TE
 def main():
     try:
         # Authenticate the training client
-        training_credentials = ApiKeyCredentials(in_headers={"Training-key": training_key})
-        trainer = CustomVisionTrainingClient(training_endpoint, training_credentials)
+        credentials = ApiKeyCredentials(in_headers={"Training-key": service_key})
+        trainer = CustomVisionTrainingClient(service_endpoint, credentials)
 
         # Authenticate the prediction client
-        prediction_credentials = ApiKeyCredentials(in_headers={"Prediction-key": prediction_key})
-        predictor = CustomVisionPredictionClient(prediction_endpoint, prediction_credentials)
+        prediction_credentials = ApiKeyCredentials(in_headers={"Prediction-key": service_key})
+        predictor = CustomVisionPredictionClient(service_endpoint, prediction_credentials)
 
         # Create a new project
         publish_iteration_name = "classifyModel"
