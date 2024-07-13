@@ -10,6 +10,7 @@
   - [Lab 3: Monitoreo de servicios de Azure AI](#lab-3-monitoreo-de-servicios-de-azure-ai)
   - [Lab 4: Uso de contenedores](#lab-4-uso-de-contenedores)
   - [Lab 5: Análisis de imágenes](#lab-5-análisis-de-imágenes)
+  - [Lab 6: Clasificación de Imágenes con Azure AI Vision](#lab-6-clasificación-de-imágenes-con-azure-ai-vision)
 
 ## Descripción
 
