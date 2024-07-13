@@ -133,5 +133,21 @@ En este laboratorio aprenderás a analizar imágenes utilizando servicios de Azu
   - `arial.ttf`: Archivo de fuente utilizado para anotar imágenes.
 
 
+### Lab 6: Clasificación de Imágenes con Azure AI Vision
 
+En este laboratorio aprenderás a:
+- Crear y entrenar un modelo de clasificación de imágenes personalizado utilizando Azure AI Vision y Custom Vision. 
+- Consumir la API de predicción de Azure AI Vision para clasificar imágenes.
+- Implementar un flujo de trabajo completo de Machine Learning Operations (MLOps) para la creación, entrenamiento y despliegue de un modelo de clasificación de imágenes.
 
+#### ·jemplos disponibles:
+
+#### Python:
+
+- `main.py`: Script para consumir la API de predicción y clasificar imágenes.
+- `workflow_example.py`: Ejemplo completo de MLOps.
+
+#### C#:
+
+- `image-classification/Program.cs`: Programa principal para consumir la API de predicción y clasificar imágenes.
+- `mlops-example/Program.cs`: Ejemplo completo de MLOps.
