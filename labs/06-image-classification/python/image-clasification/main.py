@@ -12,11 +12,12 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 # Configuration variables
-endpoint = os.getenv('AI_SERVICE_ENDPOINT')
-prediction_key = os.getenv('AI_SERVICE_KEY')
+ai_service_name = os.getenv('AI_SERVICE_NAME')
+ai_service_key = os.getenv('AI_SERVICE_KEY')
 model_id = os.getenv('AZURE_VISION_MODEL_ID')
 iteration_name = os.getenv('AZURE_VISION_ITERATION_NAME')
 confidence_threshold = float(os.getenv('AZURE_VISION_CONFIDENCE_THRESHOLD')) 
+
 
 # Test images folder (relative path to main.py)
 TEST_IMAGES_FOLDER = os.path.join(os.path.dirname(__file__), '../../test-images')
@@ -24,8 +25,9 @@ TEST_IMAGES_FOLDER = os.path.join(os.path.dirname(__file__), '../../test-images'
 def main():
     try:
         # Authenticate the client
-        credentials = ApiKeyCredentials(in_headers={"Prediction-key": prediction_key})
-        predictor = CustomVisionPredictionClient(endpoint, credentials)
+        service_endpoint = f"https://{ai_service_name}.cognitiveservices.azure.com/"
+        credentials = ApiKeyCredentials(in_headers={"Prediction-key": ai_service_key})
+        predictor = CustomVisionPredictionClient(service_endpoint, credentials)
 
         # Iterate over all images in the test folder
         for image_file in os.listdir(TEST_IMAGES_FOLDER):

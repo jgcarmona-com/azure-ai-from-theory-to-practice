@@ -151,6 +151,22 @@
             }
         },
         {
+            "name": "06-csharp-mlops-example",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-mlops-example-csharp",
+            "program": "${workspaceFolder}/labs/06-image-classification/csharp/mlops-example/bin/Debug/net8.0/mlops-example.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/labs/06-image-classification/csharp/mlops-example",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "logging": {
+                "moduleLoad": false,
+                "trace": false
+            }
+        },
+        {
             "name": "06-python-image-classification",
             "type": "debugpy",
             "request": "launch",

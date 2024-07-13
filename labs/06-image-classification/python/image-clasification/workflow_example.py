@@ -2,7 +2,6 @@ import logging
 from dotenv import load_dotenv
 import os
 import time
-import uuid
 from azure.cognitiveservices.vision.customvision.training import CustomVisionTrainingClient
 from azure.cognitiveservices.vision.customvision.prediction import CustomVisionPredictionClient
 from azure.cognitiveservices.vision.customvision.training.models import ImageFileCreateBatch, ImageFileCreateEntry
@@ -12,16 +11,26 @@ from msrest.authentication import ApiKeyCredentials
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Load environment variables from the .env file
+# Load environment variables
 load_dotenv()
 
-# Configuration variables from the .env file
-service_endpoint = os.getenv('AI_SERVICE_ENDPOINT')
+# Configuration variables
+subscription_id = os.getenv('SUBSCRIPTION_ID')
+resource_group_name = os.getenv('RESOURCE_GROUP_NAME')
+ai_service_name = os.getenv('AI_SERVICE_NAME')
 service_key = os.getenv('AI_SERVICE_KEY')
-prediction_resource_id = os.getenv('AZURE_PREDICTION_RESOURCE_ID')
+confidence_threshold = float(os.getenv('AZURE_VISION_CONFIDENCE_THRESHOLD', 0.8))
 
-# Target image for analysis (relative path to main.py)
-TARGET_IMAGE = os.path.join(os.path.dirname(__file__), '../../test-images/IMG_TEST_1.jpg')
+# Construct the AI service endpoint and prediction resource ID
+service_endpoint = f"https://{ai_service_name}.cognitiveservices.azure.com/"
+prediction_resource_id = (
+    f"/subscriptions/{subscription_id}/resourceGroups/{resource_group_name}/"
+    f"providers/Microsoft.CognitiveServices/accounts/{ai_service_name}"
+)
+
+# Directories for training and test images
+TRAINING_IMAGES_FOLDER = os.path.join(os.path.dirname(__file__), '../../training-images')
+TEST_IMAGES_FOLDER = os.path.join(os.path.dirname(__file__), '../../test-images')
 
 def main():
     try:
@@ -35,27 +44,33 @@ def main():
 
         # Create a new project
         publish_iteration_name = "classifyModel"
-        project_name = str(uuid.uuid4())
+        project_name = "MLOps Example python"
         logger.info("Creating project...")
-        project = trainer.create_project(project_name)
+        project = trainer.create_project(
+            project_name,
+            classification_type="Multiclass"
+        )
 
         # Add tags to the project
-        logger.info("Adding tags...")
-        hemlock_tag = trainer.create_tag(project.id, "Hemlock")
-        cherry_tag = trainer.create_tag(project.id, "Japanese Cherry")
-
-        # Define the base image location
-        base_image_location = os.path.join(os.path.dirname(__file__), "../../test-images")
+        tags = {}
+        logger.info("Creating tags based on filenames...")
+        for filename in os.listdir(TRAINING_IMAGES_FOLDER):
+            if filename.endswith(('.jpg', '.jpeg', '.png')):
+                tag_name = filename.split('_')[0].upper()
+                if tag_name not in tags:
+                    tag = trainer.create_tag(project.id, tag_name)
+                    tags[tag_name] = tag.id
 
         # Upload and tag images
         logger.info("Adding images...")
         image_list = []
-
-        for image_num in range(1, 6):
-            file_name = "IMG_TEST_{}.jpg".format(image_num)
-            with open(os.path.join(base_image_location, file_name), "rb") as image_contents:
-                tag_id = hemlock_tag.id if image_num % 2 == 0 else cherry_tag.id
-                image_list.append(ImageFileCreateEntry(name=file_name, contents=image_contents.read(), tag_ids=[tag_id]))
+        for filename in os.listdir(TRAINING_IMAGES_FOLDER):
+            if filename.endswith(('.jpg', '.jpeg', '.png')):
+                tag_name = filename.split('_')[0].upper()
+                tag_id = tags[tag_name]
+                file_path = os.path.join(TRAINING_IMAGES_FOLDER, filename)
+                with open(file_path, "rb") as image_contents:
+                    image_list.append(ImageFileCreateEntry(name=filename, contents=image_contents.read(), tag_ids=[tag_id]))
 
         upload_result = trainer.create_images_from_files(project.id, ImageFileCreateBatch(images=image_list))
         if not upload_result.is_batch_successful:
@@ -67,23 +82,41 @@ def main():
         # Train the project
         logger.info("Training...")
         iteration = trainer.train_project(project.id)
-        while (iteration.status != "Completed"):
+        while iteration.status != "Completed":
             iteration = trainer.get_iteration(project.id, iteration.id)
             logger.info("Training status: " + iteration.status)
-            logger.info("Waiting 10 seconds...")
-            time.sleep(10)
+            logger.info("Waiting 60 seconds...")
+            time.sleep(60)
 
-        # Publish the iteration
-        trainer.publish_iteration(project.id, iteration.id, publish_iteration_name, prediction_resource_id)
-        logger.info("Done!")
+        # Ensure the iteration is completed
+        if iteration.status == "Completed":
+            # Publish the iteration
+            trainer.publish_iteration(project.id, iteration.id, publish_iteration_name, prediction_resource_id)
+            logger.info("Model Published!")
 
-        # Test the prediction endpoint
-        with open(os.path.join(base_image_location, "IMG_TEST_1.jpg"), "rb") as image_contents:
-            results = predictor.classify_image(project.id, publish_iteration_name, image_contents.read())
+            # Test the prediction endpoint
+            for image_file in os.listdir(TEST_IMAGES_FOLDER):
+                if image_file.endswith(('.jpg', '.jpeg', '.png')):
+                    image_path = os.path.join(TEST_IMAGES_FOLDER, image_file)
 
-            # Display the results.
-            for prediction in results.predictions:
-                logger.info(f"\t{prediction.tag_name}: {prediction.probability * 100:.2f}%")
+                    # Read the image
+                    with open(image_path, "rb") as image:
+                        image_data = image.read()
+
+                    # Perform image prediction
+                    response = predictor.classify_image(project.id, publish_iteration_name, image_data)
+
+                    # Process and print results
+                    if response and response.predictions:
+                        top_prediction = max(response.predictions, key=lambda p: p.probability)
+                        if top_prediction.probability >= confidence_threshold:
+                            logger.info(f"{image_file} --> {top_prediction.tag_name} --> {top_prediction.probability:.2f}")
+                        else:
+                            logger.info(f"{image_file} --> Uncertain --> {top_prediction.probability:.2f} (Best guess: {top_prediction.tag_name})")
+                    else:
+                        logger.error("No prediction result received for image: %s", image_path)
+        else:
+            logger.error("Training did not complete successfully.")
 
     except Exception as ex:
         logger.error(ex)

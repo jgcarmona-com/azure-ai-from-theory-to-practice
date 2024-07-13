@@ -7,11 +7,9 @@ using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction;
 using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training;
 using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training.Models;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Rest;
-using TrainingClient = Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training.CustomVisionTrainingClient;
-using PredictionClient = Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction.CustomVisionPredictionClient;
 using TrainingApiKeyCredentials = Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training.ApiKeyServiceClientCredentials;
 using PredictionApiKeyCredentials = Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction.ApiKeyServiceClientCredentials;
+
 
 namespace Ai102.ImageClassification
 {
@@ -37,17 +35,16 @@ namespace Ai102.ImageClassification
                 string predictionResourceId = $"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.CognitiveServices/accounts/{aiServiceName}";
 
                 // Directories for training and test images
-                string assemblyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                string trainingImagesFolder = Path.Combine(assemblyPath, "../../training-images");
-                string testImagesFolder = Path.Combine(assemblyPath, "../../test-images");
+                string trainingImagesFolder = Path.Combine(Directory.GetCurrentDirectory(), "../../training-images");
+                string testImagesFolder = Path.Combine(Directory.GetCurrentDirectory(), "../../test-images");
 
                 // Authenticate Azure Custom Vision clients
-                TrainingClient trainingApi = AuthenticateTraining(endpoint, serviceKey);
-                PredictionClient predictionApi = AuthenticatePrediction(endpoint, serviceKey);
+                CustomVisionTrainingClient trainingApi = AuthenticateTraining(endpoint, serviceKey);
+                CustomVisionPredictionClient predictionApi = AuthenticatePrediction(endpoint, serviceKey);
 
                 // Create a new project
                 Console.WriteLine("Creating new project:");
-                var project = trainingApi.CreateProject("MLOps Example C#", domainId: new Guid("0732100f-1a38-4e49-a514-c9b44c697ab5")); // Multiclass domain
+                var project = trainingApi.CreateProject("MLOps Example C#", classificationType: "Multiclass");
 
                 // Add tags to the project
                 Console.WriteLine("Adding tags...");
@@ -55,11 +52,16 @@ namespace Ai102.ImageClassification
                 foreach (var filePath in Directory.GetFiles(trainingImagesFolder))
                 {
                     var fileName = Path.GetFileName(filePath);
-                    var tagName = fileName.Split('_')[0];
-                    if (!tags.ContainsKey(tagName))
+                    if (fileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                        fileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                        fileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
                     {
-                        var tag = trainingApi.CreateTag(project.Id, tagName);
-                        tags.Add(tagName, tag.Id);
+                        var tagName = fileName.Split('_')[0].ToUpper();
+                        if (!tags.ContainsKey(tagName))
+                        {
+                            var tag = trainingApi.CreateTag(project.Id, tagName);
+                            tags[tagName] = tag.Id;
+                        }
                     }
                 }
 
@@ -97,8 +99,8 @@ namespace Ai102.ImageClassification
                 {
                     iteration = trainingApi.GetIteration(project.Id, iteration.Id);
                     Console.WriteLine("Training status: " + iteration.Status);
-                    Console.WriteLine("Waiting 10 seconds...");
-                    Thread.Sleep(10000);
+                    Console.WriteLine("Waiting 60 seconds...");
+                    Thread.Sleep(60000);
                 }
 
                 // Publish the iteration
@@ -139,20 +141,20 @@ namespace Ai102.ImageClassification
             }
         }
 
-        private static TrainingClient AuthenticateTraining(string endpoint, string trainingKey)
+        private static CustomVisionTrainingClient AuthenticateTraining(string endpoint, string trainingKey)
         {
             var credentials = new TrainingApiKeyCredentials(trainingKey);
-            var client = new TrainingClient(credentials)
+            var client = new CustomVisionTrainingClient(credentials)
             {
                 Endpoint = endpoint
             };
             return client;
         }
 
-        private static PredictionClient AuthenticatePrediction(string endpoint, string predictionKey)
+        private static CustomVisionPredictionClient AuthenticatePrediction(string endpoint, string predictionKey)
         {
             var credentials = new PredictionApiKeyCredentials(predictionKey);
-            var client = new PredictionClient(credentials)
+            var client = new CustomVisionPredictionClient(credentials)
             {
                 Endpoint = endpoint
             };
