@@ -1,13 +1,12 @@
 # Clasificación de Imágenes con Azure AI Vision
 
-Este laboratorio te guiará a través del proceso de crear y entrenar un modelo de clasificación de imágenes personalizado utilizando Azure AI Vision. Vamos a clasificar imágenes de frutas y predecir su clase usando ejemplos prácticos basados en la [documentación oficial](https://learn.microsoft.com/en-us/azure/ai-services/custom-vision-service/quickstarts/image-classification?tabs=linux%2Cvisual-studio&pivots=programming-language-python).
+Este laboratorio te guiará a través del proceso de crear y entrenar un modelo de clasificación de imágenes personalizado utilizando Azure AI Vision y [https://www.customvision.ai/](https://www.customvision.ai/). Vamos a clasificar imágenes de frutas y predecir su clase usando ejemplos prácticos basados en la [documentación oficial](https://learn.microsoft.com/en-us/azure/ai-services/custom-vision-service/quickstarts/image-classification).
 
 ## Requisitos
 
 - Una suscripción a Azure.
-- Familiaridad con Azure y el portal de Azure.
-- Visual Studio Code instalado.
-- Git instalado.
+- Visual Studio Code.
+- Git.
 
 ## Instrucciones
 
@@ -21,95 +20,56 @@ Si no has clonado ya el repositorio, sigue estos pasos:
 
 ### 2. Provisión de Recursos en Azure
 
-1. Abre el portal de Azure en [https://portal.azure.com](https://portal.azure.com) y accede con tu cuenta de Microsoft asociada a tu suscripción de Azure.
+1. Mientras esté activo el recurso utilizado para esta demo se podrá utilizar sin modificar ninguna de las variables de entorno de los proyectos de ejemplo.
 
-2. Busca "Azure AI services" en la barra de búsqueda superior, selecciona "Azure AI Services" y crea un recurso de cuenta de servicios múltiples de Azure AI con las siguientes configuraciones:
+2. Si el recurso no está disponible, tendrás que crear tu propio recurso en tu suscripción de Azure y reemplazar los valores que corresponda en los proyectos de ejemplo, en los ficheros .env, de python y en appssettings.json, de C#.
 
-    - **Subscription**: Tu suscripción de Azure
-    - **Resource group**: Selecciona o crea un grupo de recursos
-    - **Region**: East US, West Europe, West US 2
-    - **Name**: Ingresa un nombre único
-    - **Pricing tier**: Standard S0
+### 3. Crear y Entrenar un Proyecto Personalizado
 
-3. Necesitamos una cuenta de almacenamiento para almacenar las imágenes de entrenamiento:
+1. Navega a [https://www.customvision.ai/](https://www.customvision.ai/) y accede con la cuenta de Microsoft donde creaste tu recurso de Azure AI.
+2. Crea un nuevo proyecto de clasificación de imágenes. Configura el proyecto como de tipo **Multiclass**.
+3. Añade las imágenes de entrenamiento desde la carpeta `training-images` y etiqueta cada imagen según su nombre de archivo. (Por ejemplo, si la imagen se llama `apple_01.jpg`, la etiqueta será `apple`, te recomiendo que subas todas las imagenes de cada tipo de una vez y añadas su correspondiente tag en la subida, esto te ahorrará tiempo).
 
-    - Busca y selecciona "Storage accounts" en el portal de Azure y crea una nueva cuenta de almacenamiento con las siguientes configuraciones:
-    - **Subscription**: Tu suscripción de Azure
-    - **Resource Group**: Usa el mismo grupo de recursos creado previamente
-    - **Storage Account Name**: `customclassifySUFFIX` (reemplaza `SUFFIX` con tus iniciales u otro valor para asegurar que el nombre del recurso sea único a nivel global)
-    - **Region**: Usa la misma región que utilizaste para tu recurso de Azure AI Service
-    - **Performance**: Standard
-    - **Redundancy**: Locally-redundant storage (LRS)
+### 4. Entrenar el Modelo Personalizado
 
-4. Habilita el acceso público en la cuenta de almacenamiento:
+1. Desde CustomVision.ai, selecciona el proyecto que creaste y entrena el modelo utilizando las imágenes etiquetadas.
+2. Una vez completado el entrenamiento, publica el modelo.
 
-    - Navega a "Configuration" en el grupo "Settings" y habilita "Allow Blob anonymous access". Guarda la configuración.
-    - Selecciona "Containers" en el panel izquierdo y crea un nuevo contenedor llamado `fruit` con el nivel de acceso anónimo configurado a "Container (anonymous read access for containers y blobs)".
+### 5. Probar tu Modelo Personalizado
 
-### 3. Actualizar y Ejecutar el Script de PowerShell
+PAra probar tu modelo personalizado, puedes utilizar la API de predicción de Azure AI Vision. La URL de la API y la clave de predicción están disponibles en la sección de Performance de tu proyecto, haz click en la iteración que quieres probar y luego en "Prediction URL" para ver esos valores.
 
-1. En Visual Studio Code, expande la carpeta `labs/06-image-classification` y selecciona `replace.ps1`.
-2. Reemplaza el marcador de posición `<storageAccount>` en la primera línea del archivo con el nombre de tu cuenta de almacenamiento. Guarda el archivo.
-3. Haz clic derecho en la carpeta `06-image-classification` y abre un terminal integrado. Ejecuta el siguiente comando en el terminal:
-    ```powershell
-    ./replace.ps1
-    ```
+Los ejemplos están disponibles en Python y C# y puedes lanzarlos directamente desde Visual Studio Code si lo has abierto en la carpeta raíz del repositorio. Hay cuatro ejemplos disponibles:
 
-4. Revisa el archivo `training-images/training_labels.json` para asegurarte de que el nombre de tu cuenta de almacenamiento ha sido reemplazado correctamente.
+Clasificación de Imágenes:
 
-### 4. Subir Imágenes y COCO File
+Consumo de la API de predicción expuesta por Azure AI Vision para clasificar imágenes.
 
-1. Navega al contenedor `fruit` en tu cuenta de almacenamiento en el portal de Azure.
-2. Sube todas las imágenes y el archivo JSON (COCO file) desde la carpeta `training-images` a ese contenedor.
+- **Python**: Revisa el archivo `main.py` en la carpeta `python/image-classification`.
+- **C#**: Revisa el archivo `Program.cs` en la carpeta `csharp/image-classification`.
 
-### 5. Crear y Entrenar un Proyecto Personalizado
+ML Ops:
 
-1. Navega a [https://portal.vision.cognitive.azure.com/](https://portal.vision.cognitive.azure.com/) y accede con la cuenta de Microsoft donde creaste tu recurso de Azure AI.
-2. Selecciona el tile "Customize models with images" (puede encontrarse en la pestaña "Image analysis" si no aparece en tu vista predeterminada).
-3. Si se te solicita, selecciona el recurso de Azure AI que creaste.
-4. En tu proyecto, selecciona "Add new dataset" y configura con los siguientes ajustes:
-    - **Dataset name**: `training_images`
-    - **Model type**: Image classification
-    - **Azure blob storage container**: Selecciona "Select Container"
-    - **Subscription**: Tu suscripción de Azure
-    - **Storage account**: La cuenta de almacenamiento que creaste
-    - **Blob container**: `fruit`
-    - Selecciona la casilla "Allow Vision Studio to read and write to your blob storage"
+Ejemplo de flujo de trabajo completo para 
+1. La creación de un proyecto.
+2. La adición de etiquetas basadas en los nombres de los archivos en la carpeta de imágenes de entrenamiento.
+3. La subida de imágenes con sus respectivas etiquetas.
+4. El entrenamiento del modelo.
+5. La prueba del modelo con las imágenes en la carpeta de `test-images`.
 
-5. Selecciona el dataset `training_images`.
+- **Python**: Revisa el archivo `workflow_example.py` en la carpeta `python/image-classification`.
+- **C#**: Revisa el archivo `Program.cs` en la carpeta `csharp/mlops-example`.
 
-6. En lugar de crear un nuevo proyecto de etiquetado de datos, selecciona "Add COCO file" y en el menú desplegable, selecciona "Import COCO file from a Blob Container". Selecciona `training_labels.json` del contenedor `fruit`.
+### 6. Ejemplos Didácticos
 
-### 6. Entrenar el Modelo Personalizado
+Los ejemplos didácticos demuestran el flujo completo desde la creación del proyecto hasta la predicción utilizando el modelo entrenado.
 
-1. Navega a "Custom models" en el panel izquierdo y selecciona "Train a new model" con los siguientes ajustes:
-    - **Name of model**: `classifyfruit`
-    - **Model type**: Image classification
-    - **Choose training dataset**: `training_images`
+- **Python**: Revisa el archivo `workflow_example.py` en la carpeta `python/image-classification`.
+- **C#**: Revisa el archivo `Program.cs` en la carpeta `csharp/mlops-example`.
 
-2. Deja el resto de los ajustes por defecto y selecciona "Train model".
+### 7. Limpiar Recursos
 
-3. La capacitación puede tardar un tiempo; el presupuesto predeterminado es de hasta una hora, pero para este pequeño dataset suele ser mucho más rápido. Selecciona el botón "Refresh" cada pocos minutos hasta que el estado del trabajo sea "Succeeded". Selecciona el modelo para revisar el rendimiento de la capacitación.
-
-### 7. Probar tu Modelo Personalizado
-
-1. En la parte superior de la página de tu modelo personalizado, selecciona "Try it out".
-2. Selecciona el modelo `classifyfruit` del menú desplegable y navega a la carpeta `06-image-classification\test-images`.
-3. Selecciona cada imagen y revisa los resultados. Selecciona la pestaña JSON en el cuadro de resultados para examinar la respuesta JSON completa.
-
-### 8. Ejemplos Didácticos
-
-He proporcionado ejemplos didácticos en Python y C# que demuestran el flujo completo desde la creación del proyecto hasta la predicción utilizando el modelo entrenado.
-
-- **Python**: Revisa el archivo `WorkflowExample.py` en la carpeta `python/image-classification`.
-- **C#**: Revisa el archivo `WorkflowExample.cs` en la carpeta `csharp/image-classification`.
-
-### 9. Limpiar Recursos
-
-Si no vas a utilizar los recursos de Azure creados en este laboratorio para otros módulos de capacitación, puedes eliminarlos para evitar incurrir en cargos adicionales.
-
-1. Abre el portal de Azure en [https://portal.azure.com](https://portal.azure.com) y en la barra de búsqueda superior, busca los recursos que creaste en este laboratorio.
-2. En la página del recurso, selecciona "Delete" y sigue las instrucciones para eliminar el recurso. Alternativamente, puedes eliminar todo el grupo de recursos para limpiar todos los recursos al mismo tiempo.
+Si creaste recursos en tu suscripción y no vas a utilizarlos más, deberías eliminarlos para evitar gastar más de la cuenta. Seguro que no te hace falta que te explique cómo hacerlo, pero si tienes alguna duda, aquí tienes un enlace a la [documentación oficial](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resources-portal).
 
 ---
 
