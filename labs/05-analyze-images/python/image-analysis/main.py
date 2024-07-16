@@ -10,7 +10,7 @@ from background_remover import BackgroundRemover
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-TARGET_IMAGE = "street.jpg"
+TARGET_IMAGE = "me.jpg"
 
 def main():
     try:
