@@ -1,17 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction;
-using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training;
-using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training.Models;
+using Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction.Models;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Rest;
-using TrainingClient = Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training.CustomVisionTrainingClient;
-using PredictionClient = Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction.CustomVisionPredictionClient;
-using TrainingApiKeyCredentials = Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training.ApiKeyServiceClientCredentials;
-using PredictionApiKeyCredentials = Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction.ApiKeyServiceClientCredentials;
 
 namespace Ai102.ImageClassification
 {
@@ -25,112 +17,30 @@ namespace Ai102.ImageClassification
                 IConfigurationBuilder builder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
                 IConfigurationRoot configuration = builder.Build();
 
-                string subscriptionId = configuration["SubscriptionId"];
-                string resourceGroupName = configuration["ResourceGroupName"];
                 string aiServiceName = configuration["AIServiceName"];
-                string serviceKey = configuration["AIServiceKey"];
-                string iterationName = configuration["AzureVisionIterationName"];
-                double confidenceThreshold = Convert.ToDouble(configuration["AzureVisionConfidenceThreshold"]);
-
-                // Construct the AI service endpoint and prediction resource ID
+                string predictionKey = configuration["AIServicesKey"];
                 string endpoint = $"https://{aiServiceName}.cognitiveservices.azure.com/";
-                string predictionResourceId = $"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.CognitiveServices/accounts/{aiServiceName}";
+                string modelId = configuration["ModelId"];
+                string iterationName = configuration["IterationName"];  // Load iteration name from settings
+                double confidenceThreshold = Convert.ToDouble(configuration["ConfidenceThreshold"]);  // Load confidence threshold
 
-                // Directories for training and test images
-                string assemblyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                string trainingImagesFolder = Path.Combine(assemblyPath, "../../training-images");
-                string testImagesFolder = Path.Combine(assemblyPath, "../../test-images");
+                // Test images folder (relative path to Program.cs)
+                string testImagesFolder = Path.Combine(Directory.GetCurrentDirectory(), "../../test-images");
 
-                // Authenticate Azure Custom Vision clients
-                TrainingClient trainingApi = AuthenticateTraining(endpoint, serviceKey);
-                PredictionClient predictionApi = AuthenticatePrediction(endpoint, serviceKey);
+                // Authenticate Azure Custom Vision client
+                CustomVisionPredictionClient predictionApi = AuthenticatePrediction(endpoint, predictionKey);
 
-                // Create a new project
-                Console.WriteLine("Creating new project:");
-                var project = trainingApi.CreateProject("MLOps Example C#", domainId: new Guid("0732100f-1a38-4e49-a514-c9b44c697ab5")); // Multiclass domain
-
-                // Add tags to the project
-                Console.WriteLine("Adding tags...");
-                var tags = new Dictionary<string, Guid>();
-                foreach (var filePath in Directory.GetFiles(trainingImagesFolder))
+                // Iterate over all images in the test folder
+                foreach (string imageFile in Directory.GetFiles(testImagesFolder, "*.*", SearchOption.TopDirectoryOnly)
+                                                      .Where(s => s.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                                                  s.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                                                                  s.EndsWith(".png", StringComparison.OrdinalIgnoreCase)))
                 {
-                    var fileName = Path.GetFileName(filePath);
-                    var tagName = fileName.Split('_')[0];
-                    if (!tags.ContainsKey(tagName))
-                    {
-                        var tag = trainingApi.CreateTag(project.Id, tagName);
-                        tags.Add(tagName, tag.Id);
-                    }
-                }
-
-                // Upload and tag images
-                Console.WriteLine("Adding images...");
-                var imageFiles = new List<ImageFileCreateEntry>();
-                foreach (var filePath in Directory.GetFiles(trainingImagesFolder))
-                {
-                    var fileName = Path.GetFileName(filePath);
-                    // Check if the file is an image
-                    if (fileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                        fileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                        fileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var tagName = fileName.Split('_')[0];
-                        var tagId = tags[tagName];
-                        imageFiles.Add(new ImageFileCreateEntry(fileName, File.ReadAllBytes(filePath)) { TagIds = new List<Guid> { tagId } });
-                    }
-                }
-
-                var uploadResult = trainingApi.CreateImagesFromFiles(project.Id, new ImageFileCreateBatch(imageFiles));
-                if (!uploadResult.IsBatchSuccessful)
-                {
-                    Console.WriteLine("Image batch upload failed.");
-                    foreach (var image in uploadResult.Images)
-                    {
-                        Console.WriteLine($"Image {image.SourceUrl} status: {image.Status}");
-                    }
-                }
-
-                // Train the project
-                Console.WriteLine("Training...");
-                var iteration = trainingApi.TrainProject(project.Id);
-                while (iteration.Status != "Completed")
-                {
-                    iteration = trainingApi.GetIteration(project.Id, iteration.Id);
-                    Console.WriteLine("Training status: " + iteration.Status);
-                    Console.WriteLine("Waiting 10 seconds...");
-                    Thread.Sleep(10000);
-                }
-
-                // Publish the iteration
-                trainingApi.PublishIteration(project.Id, iteration.Id, iterationName, predictionResourceId);
-                Console.WriteLine("Done!");
-
-                // Test the prediction endpoint
-                foreach (var imageFile in Directory.GetFiles(testImagesFolder, "*.*", SearchOption.TopDirectoryOnly)
-                                              .Where(s => s.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                                                          s.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                                                          s.EndsWith(".png", StringComparison.OrdinalIgnoreCase)))
-                {
+                    // Load test image
                     using FileStream testImage = new FileStream(imageFile, FileMode.Open);
-                    var result = predictionApi.ClassifyImage(project.Id, iterationName, testImage);
 
-                    // Display the results
-                    var topPrediction = result.Predictions.OrderByDescending(p => p.Probability).FirstOrDefault();
-                    if (topPrediction != null)
-                    {
-                        if (topPrediction.Probability >= confidenceThreshold)
-                        {
-                            Console.WriteLine($"{Path.GetFileName(imageFile)} --> {topPrediction.TagName} --> {topPrediction.Probability:P1}");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"{Path.GetFileName(imageFile)} --> Uncertain --> {topPrediction.Probability:P1} (Best guess: {topPrediction.TagName})");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"No prediction result received for image: {imageFile}");
-                    }
+                    // Make a prediction
+                    TestIteration(predictionApi, modelId, iterationName, testImage, imageFile, confidenceThreshold);
                 }
             }
             catch (Exception ex)
@@ -139,24 +49,43 @@ namespace Ai102.ImageClassification
             }
         }
 
-        private static TrainingClient AuthenticateTraining(string endpoint, string trainingKey)
+        private static CustomVisionPredictionClient AuthenticatePrediction(string endpoint, string predictionKey)
         {
-            var credentials = new TrainingApiKeyCredentials(trainingKey);
-            var client = new TrainingClient(credentials)
+            // Create a prediction endpoint, passing in the obtained prediction key
+            CustomVisionPredictionClient predictionApi = new CustomVisionPredictionClient(new ApiKeyServiceClientCredentials(predictionKey))
             {
                 Endpoint = endpoint
             };
-            return client;
+            return predictionApi;
         }
 
-        private static PredictionClient AuthenticatePrediction(string endpoint, string predictionKey)
+        private static void TestIteration(CustomVisionPredictionClient predictionApi, string modelId, string iterationName, Stream testImage, string imageName, double confidenceThreshold)
         {
-            var credentials = new PredictionApiKeyCredentials(predictionKey);
-            var client = new PredictionClient(credentials)
+            // Convert modelId to Guid
+            Guid projectId = Guid.Parse(modelId);
+
+            // Make a prediction against the new project
+            ImagePrediction result = predictionApi.ClassifyImage(projectId, iterationName, testImage);
+
+            // Find the top prediction
+            var topPrediction = result.Predictions.OrderByDescending(p => p.Probability).FirstOrDefault();
+
+            // Check if there's a prediction and it meets the confidence threshold
+            if (topPrediction != null)
             {
-                Endpoint = endpoint
-            };
-            return client;
+                if (topPrediction.Probability >= confidenceThreshold)
+                {
+                    Console.WriteLine($"{Path.GetFileName(imageName)} --> {topPrediction.TagName} --> {topPrediction.Probability:P1}");
+                }
+                else
+                {
+                    Console.WriteLine($"{Path.GetFileName(imageName)} --> Uncertain --> {topPrediction.Probability:P1} (Best guess: {topPrediction.TagName})");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"No prediction result received for image: {imageName}");
+            }
         }
     }
 }
