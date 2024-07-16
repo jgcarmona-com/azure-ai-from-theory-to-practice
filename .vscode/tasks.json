@@ -115,6 +115,30 @@
                 "Debug"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-detect-people-csharp",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/07-face/csharp/detect-people/detect-people.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-face-api-csharp",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/07-face/csharp/face-api/face-api.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }

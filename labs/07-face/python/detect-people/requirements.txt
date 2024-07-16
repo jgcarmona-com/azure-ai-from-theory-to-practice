@@ -1,0 +1,7 @@
+azure-ai-vision-imageanalysis
+azure-cognitiveservices-vision-customvision
+azure-core
+debugpy
+matplotlib
+pillow
+python-dotenv

@@ -181,6 +181,55 @@
             "program": "${workspaceFolder}/labs/06-image-classification/python/image-clasification/workflow_example.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/labs/06-image-classification/python/image-clasification/.env"
+        },
+        {
+            "name": "07-python-detect-people",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/07-face/python/detect-people/main.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/labs/07-face/python/detect-people/.env"
+        },       
+        {
+            "name": "07-csharp-detect-people",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-detect-people-csharp",
+            "program": "${workspaceFolder}/labs/07-face/csharp/detect-people/bin/Debug/net8.0/detect-people.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/labs/07-face/csharp/detect-people",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "logging": {
+                "moduleLoad": false,
+                "trace": false
+            }
+        },
+        {
+            "name": "07-python-face-api",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/07-face/python/face-api/main.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/labs/07-face/python/face-api/.env"
+        },       
+        {
+            "name": "07-csharp-face-api",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-face-api-csharp",
+            "program": "${workspaceFolder}/labs/07-face/csharp/face-api/bin/Debug/net8.0/face-api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/labs/07-face/csharp/face-api",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "logging": {
+                "moduleLoad": false,
+                "trace": false
+            }
         }
+        
     ]
 }

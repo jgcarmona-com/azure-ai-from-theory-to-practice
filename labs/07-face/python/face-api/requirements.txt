@@ -1,0 +1,4 @@
+azure-core
+python-dotenv
+azure-ai-vision-face
+scipy
