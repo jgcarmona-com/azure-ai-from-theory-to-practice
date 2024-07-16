@@ -23,7 +23,7 @@ class BackgroundRemover:
             "Content-Type": "application/json"
         }
 
-        image_url = f"https://github.com/jgcarmona-com/azure-ai-from-theory-to-practice/blob/main/labs/05-analyze-images/csharp/image-analysis/images/{image_file}?raw=true"
+        image_url = f"https://github.com/jgcarmona-com/azure-ai-from-theory-to-practice/blob/main/labs/05-analyze-images/python/image-analysis/images/{image_file}?raw=true"
         body = {"url": image_url}
 
         response = requests.post(url, headers=headers, json=body)
