@@ -1,12 +1,12 @@
-import os
-from azure.cognitiveservices.vision.face import FaceClient
-from azure.cognitiveservices.vision.face.models import APIErrorException
-from msrest.authentication import CognitiveServicesCredentials
 from PIL import Image, ImageDraw
 import logging
 import matplotlib.tri as tri
 import numpy as np
+import os
 
+from azure.cognitiveservices.vision.face import FaceClient
+from azure.cognitiveservices.vision.face.models import APIErrorException
+from msrest.authentication import CognitiveServicesCredentials
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -72,4 +72,4 @@ class FaceDetectionService:
         
         # Draw points
         for point in points:
-             draw.point([point[0], point[1]], fill="white", width=2)
+             draw.point([point[0], point[1]], fill="white")

@@ -1,5 +1,4 @@
 import os
-import asyncio
 from dotenv import load_dotenv
 
 from face_detection_service import FaceDetectionService
@@ -27,10 +26,8 @@ def main():
         elif command == '2':
             face_analysis_service.analyze_faces(os.path.join(BASE_DIR, 'images', 'people.jpg'))
         elif command == '3':
-            asyncio.run(face_recognition_service.ensure_person_group_exists())
-            asyncio.run(face_recognition_service.add_persons_to_group())
-            asyncio.run(face_recognition_service.train_person_group())
-            asyncio.run(face_recognition_service.recognize_faces(os.path.join(BASE_DIR, 'images', 'people.jpg')))
+            face_recognition_service.full_recognition_process(os.path.join(BASE_DIR, 'images', 'people.jpg'))
+
         else:
             break
 
