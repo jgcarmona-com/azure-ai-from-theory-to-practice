@@ -38,7 +38,7 @@ namespace Ai102.FaceApi
                     switch (command)
                     {
                         case "1":
-                            await faceDetectionService.DetectFaces("images/me_1.jpg");
+                            await faceDetectionService.DetectFaces("images/me.jpg");
                             break;
                         case "2":
                             await faceAnalysisService.AnalyzeFaces("images/people.jpg");
