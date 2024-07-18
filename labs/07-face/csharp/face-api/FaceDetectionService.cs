@@ -1,135 +1,137 @@
-using Microsoft.Azure.CognitiveServices.Vision.Face;
-using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
+using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
+using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
+using Microsoft.Extensions.Configuration;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Drawing;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using DelaunatorSharp;
-using System.Linq;
 
-namespace Ai102.FaceApi
+namespace read_text
 {
-    public class FaceDetectionService
+    class Program
     {
-        private readonly IFaceClient faceClient;
-
-        public FaceDetectionService(IFaceClient client)
+        static void Main(string[] args)
         {
-            faceClient = client;
-        }
-
-        public async Task DetectFaces(string imageFilePath)
-        {
-            IList<DetectedFace> detectedFaces;
-            using (var imageStream = File.OpenRead(imageFilePath))
+            try
             {
-                detectedFaces = await faceClient.Face.DetectWithStreamAsync(imageStream, detectionModel: DetectionModel.Detection03, returnFaceLandmarks: true);
+                // Get config settings from appsettings.json
+                IConfigurationBuilder builder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+                IConfigurationRoot configuration = builder.Build();
+                string aiSvcEndpoint = configuration["AIServicesEndpoint"];
+                string aiSvcKey = configuration["AIServicesKey"];
+
+                // Authenticate Azure Computer Vision client
+                ComputerVisionClient client = Authenticate(aiSvcEndpoint, aiSvcKey);
+
+                string testImagesFolder = Path.Combine(Directory.GetCurrentDirectory(), "../../test-images");
+
+                // Get all image files in the directory
+                string[] imageFiles = Directory.GetFiles(testImagesFolder, "*.*", SearchOption.AllDirectories)
+                                               .Where(s => s.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                                           s.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                                                           s.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                                                           s.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase) ||
+                                                           s.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
+                                               .ToArray();
+
+                if (imageFiles.Length == 0)
+                {
+                    Console.WriteLine($"No image files found in {testImagesFolder}.");
+                    return;
+                }
+
+                // Read text from each image
+                foreach (var imageFile in imageFiles)
+                {
+                    ReadFileLocal(client, imageFile).Wait();
+                }
             }
-
-            // Prepare to draw
-            using var image = Image.Load<Rgba32>(imageFilePath);
-
-            foreach (var face in detectedFaces)
+            catch (Exception ex)
             {
-                DrawFaceBoundingBox(image, face.FaceRectangle);
-                DrawLandmarks(image, face.FaceLandmarks);
-                Console.WriteLine($"Face detected with ID: {face.FaceId}");
-                Console.WriteLine($" Bounding box: x={face.FaceRectangle.Left}, y={face.FaceRectangle.Top}, width={face.FaceRectangle.Width}, height={face.FaceRectangle.Height}");
+                Console.WriteLine(ex.Message);
             }
-
-            // Save Image
-            string baseName = System.IO.Path.GetFileNameWithoutExtension(imageFilePath);
-            string ext = System.IO.Path.GetExtension(imageFilePath);
-            string output_file = $"images/{baseName}_face_detection_result{ext}";
-            image.Save(output_file);
-            Console.WriteLine($"Results saved in {output_file}");
         }
 
-        private void DrawFaceBoundingBox(Image<Rgba32> image, FaceRectangle rect)
+        public static ComputerVisionClient Authenticate(string endpoint, string key)
         {
-            var boundingBox = new RectangleF(rect.Left, rect.Top, rect.Width, rect.Height);
-            image.Mutate(ctx => ctx.Draw(Pens.Solid(Color.FromRgba(255, 0, 0, 164), 5), boundingBox));
+            return new ComputerVisionClient(new ApiKeyServiceClientCredentials(key)) { Endpoint = endpoint };
         }
 
-        private void DrawLandmarks(Image<Rgba32> image, FaceLandmarks landmarks)
+        public static async Task ReadFileLocal(ComputerVisionClient client, string imageFilePath)
         {
-            var points = new List<PointF>
+            Console.WriteLine("----------------------------------------------------------");
+            Console.WriteLine($"READ FILE FROM LOCAL: {imageFilePath}");
+            Console.WriteLine("----------------------------------------------------------");
+
+            // Read text from local file
+            using (Stream imageStream = File.OpenRead(imageFilePath))
             {
-                new PointF((float)landmarks.PupilLeft.X, (float)landmarks.PupilLeft.Y),
-                new PointF((float)landmarks.PupilRight.X, (float)landmarks.PupilRight.Y),
-                new PointF((float)landmarks.NoseTip.X, (float)landmarks.NoseTip.Y),
-                new PointF((float)landmarks.MouthLeft.X, (float)landmarks.MouthLeft.Y),
-                new PointF((float)landmarks.MouthRight.X, (float)landmarks.MouthRight.Y),
-                new PointF((float)landmarks.EyebrowLeftOuter.X, (float)landmarks.EyebrowLeftOuter.Y),
-                new PointF((float)landmarks.EyebrowLeftInner.X, (float)landmarks.EyebrowLeftInner.Y),
-                new PointF((float)landmarks.EyeLeftOuter.X, (float)landmarks.EyeLeftOuter.Y),
-                new PointF((float)landmarks.EyeLeftTop.X, (float)landmarks.EyeLeftTop.Y),
-                new PointF((float)landmarks.EyeLeftBottom.X, (float)landmarks.EyeLeftBottom.Y),
-                new PointF((float)landmarks.EyeLeftInner.X, (float)landmarks.EyeLeftInner.Y),
-                new PointF((float)landmarks.EyebrowRightInner.X, (float)landmarks.EyebrowRightInner.Y),
-                new PointF((float)landmarks.EyebrowRightOuter.X, (float)landmarks.EyebrowRightOuter.Y),
-                new PointF((float)landmarks.EyeRightInner.X, (float)landmarks.EyeRightInner.Y),
-                new PointF((float)landmarks.EyeRightTop.X, (float)landmarks.EyeRightTop.Y),
-                new PointF((float)landmarks.EyeRightBottom.X, (float)landmarks.EyeRightBottom.Y),
-                new PointF((float)landmarks.EyeRightOuter.X, (float)landmarks.EyeRightOuter.Y),
-                new PointF((float)landmarks.NoseRootLeft.X, (float)landmarks.NoseRootLeft.Y),
-                new PointF((float)landmarks.NoseRootRight.X, (float)landmarks.NoseRootRight.Y),
-                new PointF((float)landmarks.NoseLeftAlarTop.X, (float)landmarks.NoseLeftAlarTop.Y),
-                new PointF((float)landmarks.NoseRightAlarTop.X, (float)landmarks.NoseRightAlarTop.Y),
-                new PointF((float)landmarks.NoseLeftAlarOutTip.X, (float)landmarks.NoseLeftAlarOutTip.Y),
-                new PointF((float)landmarks.NoseRightAlarOutTip.X, (float)landmarks.NoseRightAlarOutTip.Y),
-                new PointF((float)landmarks.UpperLipTop.X, (float)landmarks.UpperLipTop.Y),
-                new PointF((float)landmarks.UpperLipBottom.X, (float)landmarks.UpperLipBottom.Y),
-                new PointF((float)landmarks.UnderLipTop.X, (float)landmarks.UnderLipTop.Y),
-                new PointF((float)landmarks.UnderLipBottom.X, (float)landmarks.UnderLipBottom.Y)
+                var textHeaders = await client.ReadInStreamAsync(imageStream);
+                // After the request, get the operation location (operation ID)
+                string operationLocation = textHeaders.OperationLocation;
+                Thread.Sleep(2000);
+
+                // Retrieve the URI where the extracted text will be stored from the Operation-Location header.
+                // We only need the ID and not the full URL
+                const int numberOfCharsInOperationId = 36;
+                string operationId = operationLocation.Substring(operationLocation.Length - numberOfCharsInOperationId);
+
+                // Extract the text
+                ReadOperationResult results;
+                Console.WriteLine($"Extracting text from local file {Path.GetFileName(imageFilePath)}...");
+                do
+                {
+                    results = await client.GetReadResultAsync(Guid.Parse(operationId));
+                }
+                while ((results.Status == OperationStatusCodes.Running ||
+                        results.Status == OperationStatusCodes.NotStarted));
+
+                // Display the found text and draw it on the image
+                Console.WriteLine();
+                var textLocalFileResults = results.AnalyzeResult.ReadResults;
+
+                using var image = Image.Load<Rgba32>(imageFilePath);
+                foreach (ReadResult page in textLocalFileResults)
+                {
+                    foreach (Line line in page.Lines)
+                    {
+                        Console.WriteLine(line.Text);
+                        DrawTextOnImage(image, line.Text, line.BoundingBox);
+                    }
+                }
+
+                // Save the image with the suffix "_result"
+                string baseName = Path.GetFileNameWithoutExtension(imageFilePath);
+                string ext = Path.GetExtension(imageFilePath);
+                string output_file = Path.Combine(Path.GetDirectoryName(imageFilePath), $"{baseName}_result{ext}");
+                image.Save(output_file);
+                Console.WriteLine($"Results saved in {output_file}");
+                Console.WriteLine("----------------------------------------------------------\r\n\r\n");
+            }
+        }
+
+        private static void DrawTextOnImage(Image<Rgba32> image, string text, IList<double> boundingBox)
+        {
+            var font = SystemFonts.CreateFont("Arial", 16);
+            var options = new DrawingOptions
+            {
+                TextOptions = new TextOptions
+                {
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top
+                }
             };
 
+            var position = new PointF((float)boundingBox[0], (float)boundingBox[1]);
+            var color = Color.Yellow;
 
-            // Draw Delaunay triangulation lines
-            DrawDelaunayTriangulation(image, points);
-
-            foreach (var point in points)
-            {
-                image.Mutate(ctx => ctx.Fill(Color.White, new EllipsePolygon(point, 5)));
-            }
-        }
-
-        private void DrawDelaunayTriangulation(Image<Rgba32> image, List<PointF> points)
-        {
-            // Convert PointF to DelaunatorSharp.Point
-            var delaunayPoints = points.Select(p => new DelaunatorSharp.Point(p.X, p.Y)).Cast<IPoint>().ToArray();
-
-            // Create Delaunator instance
-            var delaunay = new Delaunator(delaunayPoints);
-
-            // Define the fill color
-            var fillColor = Color.ParseHex("#4444FFDD");
-
-            var triangles = delaunay.Triangles;
-
-            for (int i = 0; i < triangles.Length; i += 3)
-            {
-                var p0 = delaunayPoints[triangles[i]];
-                var p1 = delaunayPoints[triangles[i + 1]];
-                var p2 = delaunayPoints[triangles[i + 2]];
-
-                image.Mutate(ctx => ctx.DrawLine(fillColor, 2,
-                    new PointF((float)p0.X, (float)p0.Y),
-                    new PointF((float)p1.X, (float)p1.Y)));
-
-                image.Mutate(ctx => ctx.DrawLine(fillColor, 2,
-                    new PointF((float)p1.X, (float)p1.Y),
-                    new PointF((float)p2.X, (float)p2.Y)));
-
-                image.Mutate(ctx => ctx.DrawLine(fillColor, 2,
-                    new PointF((float)p2.X, (float)p2.Y),
-                    new PointF((float)p0.X, (float)p0.Y)));
-            }
+            image.Mutate(ctx => ctx.DrawText(options, text, font, color, position));
         }
     }
 }

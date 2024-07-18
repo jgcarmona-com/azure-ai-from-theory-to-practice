@@ -189,7 +189,7 @@
             "program": "${workspaceFolder}/labs/07-face/python/detect-people/main.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/labs/07-face/python/detect-people/.env"
-        },       
+        },
         {
             "name": "07-csharp-detect-people",
             "type": "coreclr",
@@ -213,7 +213,7 @@
             "program": "${workspaceFolder}/labs/07-face/python/face-api/main.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/labs/07-face/python/face-api/.env"
-        },       
+        },
         {
             "name": "07-csharp-face-api",
             "type": "coreclr",
@@ -229,7 +229,22 @@
                 "moduleLoad": false,
                 "trace": false
             }
+        },
+        {
+            "name": "08-csharp-ocr",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-ocr-csharp",
+            "program": "${workspaceFolder}/labs/08-ocr/csharp/read-text/bin/Debug/net8.0/read-text.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/labs/08-ocr/csharp/read-text",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "logging": {
+                "moduleLoad": false,
+                "trace": false
+            }
         }
-        
     ]
 }

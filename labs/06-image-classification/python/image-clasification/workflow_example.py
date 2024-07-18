@@ -85,8 +85,8 @@ def main():
         while iteration.status != "Completed":
             iteration = trainer.get_iteration(project.id, iteration.id)
             logger.info("Training status: " + iteration.status)
-            logger.info("Waiting 60 seconds...")
-            time.sleep(60)
+            logger.info("Waiting 10 seconds...")
+            time.sleep(10)
 
         # Ensure the iteration is completed
         if iteration.status == "Completed":
@@ -94,6 +94,7 @@ def main():
             trainer.publish_iteration(project.id, iteration.id, publish_iteration_name, prediction_resource_id)
             logger.info("Model Published!")
 
+            logger.info("Testing the model...")
             # Test the prediction endpoint
             for image_file in os.listdir(TEST_IMAGES_FOLDER):
                 if image_file.endswith(('.jpg', '.jpeg', '.png')):

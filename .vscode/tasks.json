@@ -139,6 +139,18 @@
                 "Debug"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-ocr-csharp",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/08-ocr/csharp/read-text/read-text.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }

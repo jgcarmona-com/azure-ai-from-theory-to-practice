@@ -99,8 +99,8 @@ namespace Ai102.ImageClassification
                 {
                     iteration = trainingApi.GetIteration(project.Id, iteration.Id);
                     Console.WriteLine("Training status: " + iteration.Status);
-                    Console.WriteLine("Waiting 60 seconds...");
-                    Thread.Sleep(60000);
+                    Console.WriteLine("Waiting 20 seconds...");
+                    Thread.Sleep(20000);
                 }
 
                 // Publish the iteration

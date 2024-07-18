@@ -22,7 +22,7 @@ def main():
         print("1: Detect faces\n2: Analyze faces\n3: Recognize faces\nAny other key to quit")
         command = input("Enter a number:")
         if command == '1':
-            face_detection_service.detect_faces(os.path.join(BASE_DIR, 'images', 'me.jpg'))
+            face_detection_service.detect_faces(os.path.join(BASE_DIR, 'images', 'people.jpg'))
         elif command == '2':
             face_analysis_service.analyze_faces(os.path.join(BASE_DIR, 'images', 'people.jpg'))
         elif command == '3':
