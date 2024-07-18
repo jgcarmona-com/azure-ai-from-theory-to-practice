@@ -245,6 +245,14 @@
                 "moduleLoad": false,
                 "trace": false
             }
-        }
+        },
+        {
+            "name": "08-python-ocr",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/08-ocr/python/read-text/main.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/labs/08-ocr/python/read-text/.env"
+        },
     ]
 }
