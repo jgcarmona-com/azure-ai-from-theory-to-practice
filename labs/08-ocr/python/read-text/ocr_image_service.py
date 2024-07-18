@@ -38,7 +38,12 @@ class OcrImageService:
                             logger.info(f"Text: {line.text}")
                     
                     output_path = os.path.splitext(image_path)[0] + "_result.jpg"
-                    image.save(output_path)
+                    
+                    # Convert image to RGB if it is in RGBA
+                    if image.mode == 'RGBA':
+                        image = image.convert('RGB')
+                    
+                    image.save(output_path, format='JPEG')
                     logger.info(f"Results saved in {output_path}")
                 else:
                     logger.info("No text found.")
