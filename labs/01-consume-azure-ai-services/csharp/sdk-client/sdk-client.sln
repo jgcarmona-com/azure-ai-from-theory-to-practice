@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdk-client", "sdk-client.csproj", "{010A55C9-79F9-4D48-8150-EBEFF5A81EFB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{010A55C9-79F9-4D48-8150-EBEFF5A81EFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{010A55C9-79F9-4D48-8150-EBEFF5A81EFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{010A55C9-79F9-4D48-8150-EBEFF5A81EFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{010A55C9-79F9-4D48-8150-EBEFF5A81EFB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
