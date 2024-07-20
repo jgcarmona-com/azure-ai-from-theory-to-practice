@@ -12,7 +12,7 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace read_text
+namespace Ai102.ReadText
 {
     class Program
     {

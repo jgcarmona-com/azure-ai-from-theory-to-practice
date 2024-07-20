@@ -10,7 +10,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-class OcrImageService:
+class ImageProcessingService:
     def __init__(self, endpoint, key):
         self.client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(key))
 

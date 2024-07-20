@@ -1,3 +1,4 @@
 azure-cognitiveservices-vision-computervision
+azure-ai-documentintelligence
 pillow
 python-dotenv
