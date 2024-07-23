@@ -24,7 +24,7 @@ namespace Ai102.ReadText
                 {
                     Console.WriteLine("Select an option:");
                     Console.WriteLine("1. Process Images");
-                    Console.WriteLine("2. Extract text from PDF (Not Implemented)");
+                    Console.WriteLine("2. Extract text from PDF");
 
                     var option = Console.ReadLine();
 
