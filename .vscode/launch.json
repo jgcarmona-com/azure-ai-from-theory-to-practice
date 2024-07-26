@@ -253,6 +253,30 @@
             "program": "${workspaceFolder}/labs/08-ocr/python/read-text/main.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/labs/08-ocr/python/read-text/.env"
+        },      
+        {
+            "name": "10-csharp-analyze-text",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-text-analysis-csharp",
+            "program": "${workspaceFolder}/labs/10-analyze-text/csharp/text-analysis/bin/Debug/net8.0/text-analysis.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/labs/10-analyze-text/csharp/text-analysis",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "logging": {
+                "moduleLoad": false,
+                "trace": false
+            }
         },
+        {
+            "name": "10-python-analyze-text",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/10-analyze-text/python/text-analysis/main.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/labs/10-analyze-text/python/text-analysis/.env"
+        },      
     ]
 }

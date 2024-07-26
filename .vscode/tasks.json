@@ -151,6 +151,19 @@
                 "Debug"
             ],
             "problemMatcher": "$msCompile"
+        },
+        
+        {
+            "label": "build-text-analysis-csharp",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/10-analyze-text/csharp/text-analysis/text-analysis.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }
