@@ -11,6 +11,10 @@
   - [Lab 4: Uso de contenedores](#lab-4-uso-de-contenedores)
   - [Lab 5: Análisis de imágenes](#lab-5-análisis-de-imágenes)
   - [Lab 6: Clasificación de Imágenes con Azure AI Vision](#lab-6-clasificación-de-imágenes-con-azure-ai-vision)
+  - [Lab 7: Detección de Personas](#lab-7-detección-de-personas)
+  - [Lab 8: Reconocimiento Óptico de Caracteres (OCR)](#lab-8-reconocimiento-óptico-de-caracteres-ocr)
+  - [Lab 9: Indexación de Videos](#lab-9-indexación-de-videos)
+  - [Lab 10: Análisis de Texto](#lab-10-análisis-de-texto)
 
 ## Descripción
 
@@ -152,3 +156,68 @@ En este laboratorio aprenderás a:
 
 - `image-classification/Program.cs`: Programa principal para consumir la API de predicción y clasificar imágenes.
 - `mlops-example/Program.cs`: Ejemplo completo de MLOps.
+
+### Lab 7: Detección de Personas
+
+En este laboratorio aprenderás a detectar personas en imágenes utilizando servicios de Azure AI, con ejemplos en C# y Python.
+
+#### csharp
+
+- **Archivos:**
+  - `detect-people/Program.cs`: Programa principal de ejemplo en C# para detectar personas.
+  - `detect-people/appsettings.json`: Archivo de configuración para la aplicación.
+  - `detect-people/detect-people.csproj`: Archivo del proyecto C#.
+
+#### python
+
+- **Archivos:**
+  - `detect-people/main.py`: Código en Python para detectar personas en imágenes.
+  - `detect-people/requirements.txt`: Archivo de requisitos para la aplicación Python.
+
+### Lab 8: Reconocimiento Óptico de Caracteres (OCR)
+
+En este laboratorio aprenderás a realizar OCR en imágenes y documentos utilizando servicios de Azure AI, con ejemplos en C# y Python.
+
+#### csharp
+
+- **Archivos:**
+  - `read-text/DocumentProcessingService.cs`: Servicio para procesar documentos.
+  - `read-text/ImageProcessingService.cs`: Servicio para procesar imágenes.
+  - `read-text/Program.cs`: Programa principal de ejemplo en C#.
+  - `read-text/appsettings.json`: Archivo de configuración para la aplicación.
+  - `read-text/read-text.csproj`: Archivo del proyecto C#.
+
+#### python
+
+- **Archivos:**
+  - `read-text/document_processing_service.py`: Servicio en Python para procesar documentos.
+  - `read-text/image_processing_service.py`: Servicio en Python para procesar imágenes.
+  - `read-text/main.py`: Programa principal de ejemplo en Python.
+  - `read-text/requirements.txt`: Archivo de requisitos para la aplicación Python.
+
+### Lab 9: Indexación de Videos
+
+En este laboratorio aprenderás a analizar videos utilizando el servicio de indexación de videos de Azure.
+
+#### Archivos:
+
+- `analyze-video-editor.html`: Página HTML para analizar videos en un editor.
+- `analyze-video-player-insights.html`: Página HTML para reproducir videos con información de análisis.
+- `get-videos.ps1`: Script de PowerShell para obtener videos.
+
+### Lab 10: Análisis de Texto
+
+En este laboratorio aprenderás a analizar texto utilizando los servicios de análisis de texto de Azure, con ejemplos en C# y Python.
+
+#### csharp
+
+- **Archivos:**
+  - `text-analysis/Program.cs`: Programa principal de ejemplo en C# para analizar texto.
+  - `text-analysis/appsettings.json`: Archivo de configuración para la aplicación.
+  - `text-analysis/text-analysis.csproj`: Archivo del proyecto C#.
+
+#### python
+
+- **Archivos:**
+  - `text-analysis/main.py`: Programa principal de ejemplo en Python para analizar texto.
+  - `text-analysis/requirements.txt`: Archivo de requisitos para la aplicación Python.
