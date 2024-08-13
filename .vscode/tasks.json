@@ -164,6 +164,19 @@
                 "Debug"
             ],
             "problemMatcher": "$msCompile"
+        },
+         
+        {
+            "label": "build-qna-csharp",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/11-qna/csharp/qna-app/qna-app.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }

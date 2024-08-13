@@ -277,6 +277,30 @@
             "program": "${workspaceFolder}/labs/10-analyze-text/python/text-analysis/main.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/labs/10-analyze-text/python/text-analysis/.env"
-        },      
+        },             
+        {
+            "name": "11-csharp-qna",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-qna-csharp",
+            "program": "${workspaceFolder}/labs/11-qna/csharp/qna-app/bin/Debug/net8.0/qna-app.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/labs/11-qna/csharp/qna-app",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "logging": {
+                "moduleLoad": false,
+                "trace": false
+            }
+        },
+        {
+            "name": "11-python-qna",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/11-qna/python/qna-app/qna-app.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/labs/11-qna/python/qna-app/.env"
+        },   
     ]
 }
