@@ -15,6 +15,9 @@
   - [Lab 8: Reconocimiento Óptico de Caracteres (OCR)](#lab-8-reconocimiento-óptico-de-caracteres-ocr)
   - [Lab 9: Indexación de Videos](#lab-9-indexación-de-videos)
   - [Lab 10: Análisis de Texto](#lab-10-análisis-de-texto)
+  - [Lab 11: Preguntas y Respuestas (QnA Bot)](#lab-11-creación-de-un-bot-de-preguntas-y-respuestas-qna-bot)
+  - [Lab 12: Language Understanding](#lab-12-creación-del-aventubot-para-actividades-de-aventura)
+
 
 ## Descripción
 
@@ -221,3 +224,37 @@ En este laboratorio aprenderás a analizar texto utilizando los servicios de an�
 - **Archivos:**
   - `text-analysis/main.py`: Programa principal de ejemplo en Python para analizar texto.
   - `text-analysis/requirements.txt`: Archivo de requisitos para la aplicación Python.
+
+### Lab 11: Creación de un Bot de Preguntas y Respuestas (QnA Bot)
+
+En este laboratorio aprenderás a crear un bot de preguntas y respuestas utilizando el servicio de Azure AI Language para responder preguntas basadas en un conocimiento predefinido.
+
+#### csharp
+
+- **Archivos:**
+  - `qna-bot/Program.cs`: Programa principal de ejemplo en C# para el bot de preguntas y respuestas.
+  - `qna-bot/appsettings.json`: Archivo de configuración para la aplicación.
+  - `qna-bot/qna-bot.csproj`: Archivo del proyecto C#.
+
+#### python
+
+- **Archivos:**
+  - `qna-bot/main.py`: Código en Python para implementar el bot de preguntas y respuestas.
+  - `qna-bot/requirements.txt`: Archivo de requisitos para la aplicación Python.
+
+### Lab 12: Creación del AventuBot para Actividades de Aventura
+
+En este laboratorio aprenderás a desarrollar un bot conversacional llamado **AventuBot**. Este bot está diseñado para ayudar a los usuarios a encontrar y reservar actividades de aventura como escalada, senderismo, y más. Utiliza el servicio de Azure AI Language para comprender las intenciones y entidades en el lenguaje natural.
+
+#### csharp
+
+- **Archivos:**
+  - `aventubot/Program.cs`: Programa principal de ejemplo en C# para el AventuBot.
+  - `aventubot/appsettings.json`: Archivo de configuración para la aplicación.
+  - `aventubot/aventubot.csproj`: Archivo del proyecto C#.
+
+#### python
+
+- **Archivos:**
+  - `aventubot/main.py`: Código en Python para implementar el AventuBot.
+  - `aventubot/requirements.txt`: Archivo de requisitos para la aplicación Python.
