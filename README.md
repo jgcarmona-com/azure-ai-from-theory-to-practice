@@ -17,6 +17,8 @@
   - [Lab 10: Análisis de Texto](#lab-10-análisis-de-texto)
   - [Lab 11: Preguntas y Respuestas (QnA Bot)](#lab-11-creación-de-un-bot-de-preguntas-y-respuestas-qna-bot)
   - [Lab 12: Language Understanding](#lab-12-creación-del-aventubot-para-actividades-de-aventura)
+  - [Lab 13: Clasificación de Texto Personalizada](#lab-13-clasificación-de-texto-personalizada)
+
 
 
 ## Descripción
@@ -258,3 +260,22 @@ En este laboratorio aprenderás a desarrollar un bot conversacional llamado **Av
 - **Archivos:**
   - `aventubot/main.py`: Código en Python para implementar el AventuBot.
   - `aventubot/requirements.txt`: Archivo de requisitos para la aplicación Python.
+
+### Lab 13: Clasificación de Texto Personalizada
+
+En este laboratorio aprenderás a crear un modelo de clasificación de texto personalizado utilizando el servicio Azure AI Language. El laboratorio incluye la carga de ejemplos de artículos, la etiqueta de datos y la creación de un modelo capaz de clasificar texto en categorías específicas. Aprenderás a entrenar, evaluar y desplegar un modelo para luego consumirlo mediante una aplicación en C# o Python.
+
+#### csharp
+
+- **Archivos:**
+  - `classify-text/Program.cs`: Programa principal de ejemplo en C# para clasificar texto.
+  - `classify-text/appsettings.json`: Archivo de configuración para la aplicación.
+  - `classify-text/classify-text.csproj`: Archivo del proyecto C#.
+
+#### python
+
+- **Archivos:**
+  - `classify-text/main.py`: Código en Python para implementar la clasificación de texto.
+  - `classify-text/requirements.txt`: Archivo de requisitos para la aplicación Python.
+
+Este contenido está diseñado para demostrar cómo construir un proyecto de clasificación de texto, etiquetar datos, entrenar un modelo y luego desplegarlo para su consumo desde una aplicación real.

@@ -321,6 +321,30 @@
             "program": "${workspaceFolder}/labs/12-language-understanding/python/aventubot-client/aventubot_client.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/labs/12-language-understanding/python/aventubot-client/.env"
+        },
+        {
+            "name": "13-csharp-text-classification",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-text-classification-csharp",
+            "program": "${workspaceFolder}/labs/13-text-classification/csharp/classify-text/bin/Debug/net8.0/classify-text.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/labs/13-text-classification/csharp/classify-text",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "logging": {
+                "moduleLoad": false,
+                "trace": false
+            }
+        },
+        {
+            "name": "13-python-text-classification",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/labs/13-text-classification/python/classify-text/classify-text.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/labs/13-text-classification/python/classify-text/.env"
         }
     ]
 }

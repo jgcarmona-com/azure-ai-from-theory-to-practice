@@ -189,6 +189,19 @@
                 "Debug"
             ],
             "problemMatcher": "$msCompile"
+        },
+        
+        {
+            "label": "build-text-classification-csharp",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/13-text-classification/csharp/classify-text/classify-text.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }
