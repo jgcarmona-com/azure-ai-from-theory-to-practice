@@ -1,0 +1,191 @@
+{
+    "api-version": "2021-11-01-preview",
+    "metadata": {
+        "name": "AventuBot",
+        "description": "Natural language model for adventure tourism",
+        "type": "Conversation",
+        "multilingual": false,
+        "language": "es-es",
+        "settings": {
+            "confidenceThreshold": 0.5
+        }
+    },
+    "assets": {
+        "intents": [
+            {
+                "name": "None"
+            },
+            {
+                "name": "FindActivities"
+            },
+            {
+                "name": "GetActivityDetails"
+            },
+            {
+                "name": "GetActivityLocation"
+            },
+            {
+                "name": "BookActivity"
+            }
+        ],
+        "entities": [
+            {
+                "name": "Activity",
+                "compositionSetting": "ReturnLongestOverlap",
+                "list": null,
+                "prebuiltEntities": null
+            },
+            {
+                "name": "Location",
+                "compositionSetting": "ReturnLongestOverlap",
+                "list": null,
+                "prebuiltEntities": [
+                    {
+                        "displayName": "GeographyV2",
+                        "semanticType": "Location",
+                        "semanticSubtype": null
+                    }
+                ]
+            },
+            {
+                "name": "Date",
+                "compositionSetting": "ReturnLongestOverlap",
+                "list": null,
+                "prebuiltEntities": [
+                    {
+                        "displayName": "DateTime",
+                        "semanticType": "DateTime",
+                        "semanticSubtype": null
+                    }
+                ]
+            },
+            {
+                "name": "Participants",
+                "compositionSetting": "ReturnLongestOverlap",
+                "list": null,
+                "prebuiltEntities": [
+                    {
+                        "displayName": "Number",
+                        "semanticType": "Number",
+                        "semanticSubtype": null
+                    }
+                ]
+            }
+        ],
+        "examples": [
+            {
+                "text": "¿Qué deportes de aventura puedo hacer en Costa Rica?",
+                "language": "es-es",
+                "intent": "FindActivities",
+                "entities": [
+                    {
+                        "entityName": "Location",
+                        "offset": 37,
+                        "length": 11
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "¿Hay buceo en Cancún?",
+                "language": "es-es",
+                "intent": "FindActivities",
+                "entities": [
+                    {
+                        "entityName": "Activity",
+                        "offset": 8,
+                        "length": 5
+                    },
+                    {
+                        "entityName": "Location",
+                        "offset": 17,
+                        "length": 6
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "¿Qué necesito para hacer rafting en el Amazonas?",
+                "language": "es-es",
+                "intent": "GetActivityDetails",
+                "entities": [
+                    {
+                        "entityName": "Activity",
+                        "offset": 26,
+                        "length": 7
+                    },
+                    {
+                        "entityName": "Location",
+                        "offset": 37,
+                        "length": 11
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "¿Dónde se puede hacer senderismo en España?",
+                "language": "es-es",
+                "intent": "GetActivityLocation",
+                "entities": [
+                    {
+                        "entityName": "Activity",
+                        "offset": 22,
+                        "length": 10
+                    },
+                    {
+                        "entityName": "Location",
+                        "offset": 35,
+                        "length": 6
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Quiero reservar una clase de surf en Bali para el próximo fin de semana.",
+                "language": "es-es",
+                "intent": "BookActivity",
+                "entities": [
+                    {
+                        "entityName": "Activity",
+                        "offset": 25,
+                        "length": 4
+                    },
+                    {
+                        "entityName": "Location",
+                        "offset": 33,
+                        "length": 4
+                    },
+                    {
+                        "entityName": "Date",
+                        "offset": 42,
+                        "length": 22
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Reserva de rafting para cuatro personas en el Gran Cañón.",
+                "language": "es-es",
+                "intent": "BookActivity",
+                "entities": [
+                    {
+                        "entityName": "Activity",
+                        "offset": 11,
+                        "length": 7
+                    },
+                    {
+                        "entityName": "Participants",
+                        "offset": 24,
+                        "length": 14
+                    },
+                    {
+                        "entityName": "Location",
+                        "offset": 43,
+                        "length": 13
+                    }
+                ],
+                "dataset": "Train"
+            }
+        ]
+    }
+}

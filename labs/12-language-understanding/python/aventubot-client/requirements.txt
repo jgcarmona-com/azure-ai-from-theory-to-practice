@@ -1,0 +1,3 @@
+azure-ai-language-conversations
+python-dotenv
+timedelta

@@ -164,6 +164,44 @@
                 "Debug"
             ],
             "problemMatcher": "$msCompile"
+        },
+         
+        {
+            "label": "build-qna-csharp",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/11-qna/csharp/qna-app/qna-app.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-language-understanding-csharp",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/12-language-understanding/csharp/aventubot-client/aventubot_client.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        
+        {
+            "label": "build-text-classification-csharp",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/labs/13-text-classification/csharp/classify-text/classify-text.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }
