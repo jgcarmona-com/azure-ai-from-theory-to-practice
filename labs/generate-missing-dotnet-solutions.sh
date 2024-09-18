@@ -13,7 +13,7 @@ generate_solutions() {
 
       # Check if a solution file already exists
       if [ ! -f "$solution_path" ]; then
-        dotnet new sln -n "$solution_name" -o "$project_dir" -f "net8.0"
+        dotnet new sln -n "$solution_name" -o "$project_dir"
         dotnet sln "$solution_path" add "$csproj"
         echo "Created solution: $solution_path"
       else
